@@ -13,10 +13,5 @@ public class Socket extends Thread {
 	}
 	
 	public void handShake(){
-		Packet pack = new ArduinoPacket();
-		pack.setCode(OperationCode.Join);
-		pack.setNonce(i);
-		
-		
 	}
 }

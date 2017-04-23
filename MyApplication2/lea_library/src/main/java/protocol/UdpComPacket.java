@@ -15,7 +15,7 @@ public class UdpComPacket extends ComPacket{
 	private DatagramPacket udp_send = null;
 	private DatagramPacket udp_receive = null;
 	private DatagramSocket soc = null;
-	private DatagramSocket soc1 = null;
+	private DatagramSocket receive_socket = null;
 	private InetAddress dest = null;
 	private byte[] buffer = new byte[32];
 	private byte[] send_data = new byte[32];
@@ -26,16 +26,24 @@ public class UdpComPacket extends ComPacket{
 			dest = InetAddress.getByName(dn);
 			udp_send = new DatagramPacket(send_data, send_data.length, dest, Integer.parseInt(port));
 			udp_receive = new DatagramPacket(buffer, buffer.length);
-			soc1 = new DatagramSocket(Integer.parseInt(port));
+			receive_socket = new DatagramSocket(Integer.parseInt(port));
 			soc = new DatagramSocket();
 			soc.setSoTimeout(1000);
-			soc1.setSoTimeout(1000);
+			receive_socket.setSoTimeout(1000);
 		}
 		catch(UnknownHostException e){
 			
 		}
 		catch(SocketException e){
 			
+		}
+	}
+
+	public UdpComPacket(String port){
+		try {
+			this.receive_socket = new DatagramSocket(Integer.parseInt(port));
+			udp_receive = new DatagramPacket(this.buffer,this.buffer.length);
+		} catch (SocketException e) {
 		}
 	}
 
@@ -60,7 +68,7 @@ public class UdpComPacket extends ComPacket{
 		for(;flag;){
 			try {
 				System.out.println("패킷 받음");
-				soc1.receive(udp_receive);
+				receive_socket.receive(udp_receive);
 				flag = false;
 			} catch (SocketTimeoutException e){
 				if(check < 3){
@@ -87,7 +95,4 @@ public class UdpComPacket extends ComPacket{
 	public void setBuffer(byte[] buffer) {
 		this.buffer = buffer;
 	}
-
-	
-	
 }

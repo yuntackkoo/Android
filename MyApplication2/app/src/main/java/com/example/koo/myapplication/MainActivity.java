@@ -1,6 +1,8 @@
 package com.example.koo.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,94 +10,77 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 
-import kr.re.nsr.crypto.BlockCipherMode;
-import kr.re.nsr.crypto.mode.ECBMode;
-import kr.re.nsr.crypto.symm.LEA;
+import config.ConfigData;
 
 public class MainActivity extends AppCompatActivity {
-
-    EditText msg = null;
-    send t = null;
-    EditText ip = null;
-    EditText port = null;
-    MessageDigest sh = null;
+    ObjectOutputStream oout = null;
+    ObjectInputStream oin = null;
+    FileOutputStream fout = null;
     Intent intent = null;
+    EditText input = null;
+    EditText output = null;
+    TextView result = null;
+    ConfigDataManager dmgr = null;
+    ConfigData data = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        t = new send();
-        msg = (EditText) findViewById(R.id.msg);
-        ip = (EditText) findViewById(R.id.ip);
-        port = (EditText) findViewById(R.id.port);
         intent = new Intent(getApplicationContext(),Next.class);
-
-        ActionBar action = this.getSupportActionBar();
-
-        action.setDisplayShowCustomEnabled(true);
-        action.setDisplayHomeAsUpEnabled(false);
-        action.setDisplayShowHomeEnabled(false);
-        action.setDisplayShowTitleEnabled(false);
-        action.setDisplayUseLogoEnabled(false);
-
-        View actionlay = LayoutInflater.from(this).inflate(R.layout.layout,null);
-        action.setCustomView(actionlay);
-
+        input = (EditText) findViewById(R.id.input);
+        output = (EditText) findViewById(R.id.output);
+        dmgr = ConfigDataManager.getInstance(this);
+        this.data = dmgr.getData();
+        result = (TextView) findViewById(R.id.result);
+        Intent service = new Intent(getApplicationContext(),BackGround.class);
+        startService(service);
     }
 
-    public void test(View view){
-        Toast.makeText(getApplicationContext() ,"메세지 전송",Toast.LENGTH_LONG).show();
-        t.start();
+    public void save(View view){
+        data.setAngle(data.getAngle() + 1);
+        if(data.isAuto_update()){
+            data.setAuto_update(false);
+        }else{
+            data.setAuto_update(true);
+        }
+        data.getUser().add(input.getText().toString());
+        data.getDevice().add(output.getText().toString());
+        dmgr.saveData(this.data);
+    }
+
+    public void load(View view){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("앵글 : "+this.data.getAngle());
+        stringBuffer.append("\n자동 업데이트 : " + this.data.isAuto_update());
+        stringBuffer.append("\n");
+        for (String s :
+                data.getUser()) {
+            stringBuffer.append(s + " ");
+        }
+        stringBuffer.append("\n");
+        for (String s :
+                data.getDevice()) {
+            stringBuffer.append(s + " ");
+        }
+        result.setText(stringBuffer);
     }
 
     public void log(View view){
         startActivity(intent);
-    }
-
-
-
-    class send extends Thread
-    {
-        DatagramSocket soc = null;
-        DatagramPacket packet = null;
-        byte[] byt = new byte[2000];
-        InetAddress add = null;
-
-        public send()
-        {
-            byt[0] = 0;
-            try{
-                soc = new DatagramSocket();
-                sh = MessageDigest.getInstance("SHA-1");
-            }
-            catch (Exception e)
-            {}
-        }
-
-        @Override
-        public void run() {
-
-            for(;;) {
-                try {
-                    add = InetAddress.getByName(ip.getText().toString());
-                    packet = new DatagramPacket(msg.getText().toString().getBytes(), msg.getText().toString().length(), add, Integer.parseInt(port.getText().toString()));
-                    soc.send(packet);
-                    sleep(1000);
-
-                } catch (Exception e) {
-                    Toast.makeText(MainActivity.this, "에러발생", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
     }
 }
