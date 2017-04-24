@@ -67,7 +67,6 @@ public class UdpComPacket extends ComPacket{
 		boolean flag = true;
 		for(;flag;){
 			try {
-				System.out.println("패킷 받음");
 				receive_socket.receive(udp_receive);
 				flag = false;
 			} catch (SocketTimeoutException e){
@@ -77,14 +76,14 @@ public class UdpComPacket extends ComPacket{
 				}
 				else{
 					System.out.println("시간 초과");
-					return null;
+					flag = false;
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		process.doProcess();
+		this.process.doProcess();
 		return null;
 	}
 
@@ -94,5 +93,21 @@ public class UdpComPacket extends ComPacket{
 
 	public void setBuffer(byte[] buffer) {
 		this.buffer = buffer;
+	}
+
+	@Override
+	public void setProcess(PacketProcess process) {
+		this.process = process;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		if(soc != null){
+			soc.close();
+		}
+		if(receive_socket != null){
+			receive_socket.close();
+		}
+		super.finalize();
 	}
 }

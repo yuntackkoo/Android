@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         this.data = dmgr.getData();
         result = (TextView) findViewById(R.id.result);
         Intent service = new Intent(getApplicationContext(),BackGround.class);
+
         startService(service);
     }
 

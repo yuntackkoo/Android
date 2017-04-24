@@ -39,33 +39,38 @@ public class BackGround extends Service {
     @Override
     public void onCreate() {
         Toast.makeText(BackGround.this,"asdf",Toast.LENGTH_LONG).show();
-        notimgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        noti = new Notification.Builder(getApplicationContext())
-                .setContentTitle("Content Title")
-                .setContentText("Content Text")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker("알림")
-                .build();
-        service = new ServiceThread(this, new PacketProcess() {
-            @Override
-            public void doProcess() {
-                notimgr.notify(777,noti);
-            }
-        });
+        if(notimgr == null) {
+            notimgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        if(noti == null) {
+            noti = new Notification.Builder(getApplicationContext())
+                    .setContentTitle("Content Title")
+                    .setContentText("Content Text")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setTicker("알림")
+                    .build();
+        }
+        if(service == null) {
+            service = new ServiceThread(this, new PacketProcess() {
+                @Override
+                public void doProcess() {
+                    notimgr.notify(777, noti);
+                }
+            });
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        service.start();
+        if(!service.isAlive()) {
+            service.start();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        service.interrupt();
+        service = null;
         super.onDestroy();
     }
-
-
 }
-
