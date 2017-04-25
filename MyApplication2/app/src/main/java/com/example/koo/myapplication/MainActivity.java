@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.security.MessageDigest;
 
 import config.ConfigData;
+import protocol.TcpComPacket;
 
 public class MainActivity extends AppCompatActivity {
     ObjectOutputStream oout = null;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TextView result = null;
     ConfigDataManager dmgr = null;
     ConfigData data = null;
+    sendThread send = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         this.data = dmgr.getData();
         result = (TextView) findViewById(R.id.result);
         Intent service = new Intent(getApplicationContext(),BackGround.class);
+        //startService(service);
 
-        startService(service);
     }
 
     public void save(View view){
@@ -81,7 +83,53 @@ public class MainActivity extends AppCompatActivity {
         result.setText(stringBuffer);
     }
 
+    public void turnOn(View view){
+        if(send == null) {
+            send = new sendThread();
+            send.start();
+        }
+        send.interrupt();
+    }
+
+    public void turnOff(View view){
+        if(send == null) {
+            send = new sendThread();
+            send.start();
+        }
+        send.interrupt();
+    }
+
     public void log(View view){
         startActivity(intent);
+    }
+
+    private class sendThread extends Thread{
+        TcpComPacket tcp = null;
+
+        public sendThread() {
+            tcp = new TcpComPacket("192.168.43.159","255");
+        }
+
+        public void turnOff(){
+        }
+
+        @Override
+        public void run() {
+            byte[] send = new byte[32];
+            boolean flag = true;
+            try {
+                for (; ; ) {
+                    if(flag) {
+                        send[0] = 'l';
+                    }else{
+                        send[0] = 'h';
+                    }
+                    tcp.send(send);
+                    sleep(Long.MAX_VALUE);
+                }
+            }catch (InterruptedException e){
+                flag = !flag;
+            }
+        }
     }
 }

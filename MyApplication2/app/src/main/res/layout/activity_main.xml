@@ -10,9 +10,9 @@
         android:layout_width="368dp"
         android:layout_height="495dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="8dp"
+        android:weightSum="1"
         tools:layout_editor_absoluteX="8dp"
-        android:weightSum="1">
+        tools:layout_editor_absoluteY="8dp">
 
         <EditText
             android:id="@+id/input"
@@ -34,21 +34,35 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="save"
-            android:onClick="save"/>
+            android:onClick="save"
+            android:text="save" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="load"
-            android:onClick="load"/>
+            android:onClick="load"
+            android:text="load" />
 
         <TextView
             android:id="@+id/result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_weight="0.52" />
+            android:layout_weight="0.52"
+            android:text="TextView" />
+
+        <Button
+            android:id="@+id/turnOn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="on"
+            android:onClick="turnOn"/>
+
+        <Button
+            android:id="@+id/turnOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="off"
+            android:onClick="turnOff"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

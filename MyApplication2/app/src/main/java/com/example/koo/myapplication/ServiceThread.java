@@ -1,33 +1,31 @@
 package com.example.koo.myapplication;
 
-import android.app.NotificationManager;
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
+import protocol.ComPacket;
 import protocol.PacketProcess;
-import protocol.UdpComPacket;
+import protocol.TcpComPacket;
 
 /**
  * Created by Koo on 2017-04-23.
  */
 
 public class ServiceThread extends Thread {
-    private UdpComPacket udpsocket = null;
+    private TcpComPacket tcpsocket = null;
     private boolean state = true;
     private PacketProcess p;
     private Context context = null;
 
     public ServiceThread(Context c, PacketProcess process) {
-        udpsocket = new UdpComPacket("15000");
+        tcpsocket = new TcpComPacket("255");
         context = c;
-        udpsocket.setProcess(process);
+        tcpsocket.setProcess(process);
     }
 
     @Override
     public void run() {
         for(;;) {
-            udpsocket.receive();
+            tcpsocket.receive();
         }
     }
 }
