@@ -22,9 +22,8 @@ public class TcpComPacket extends ComPacket{
 	
 	public TcpComPacket(String dn, String port) {
 		try{
-			byte[] add = {(byte)192,(byte)168,43,(byte)159};
 			this.port = Integer.parseInt(port);
-			socket = new InetSocketAddress(InetAddress.getByAddress(add),45621);
+			socket = new InetSocketAddress(InetAddress.getByName(dn),45621);
 			tcp_send.connect(socket,20000);
 			in = new BufferedInputStream(tcp_send.getInputStream());
 			out = new BufferedOutputStream(tcp_send.getOutputStream());
@@ -35,6 +34,7 @@ public class TcpComPacket extends ComPacket{
 		}
 		catch (SecurityException e){
 		}
+
 	}
 
 	public TcpComPacket(String port){
@@ -90,25 +90,5 @@ public class TcpComPacket extends ComPacket{
 	@Override
 	public void setProcess(PacketProcess process) {
 		this.process = process;
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		if(soc != null){
-			soc.close();
-		}
-		if(tcp_receive != null){
-			tcp_receive.close();
-		}
-		if(tcp_send != null){
-			tcp_send.close();
-		}
-		if(in != null){
-			in.close();
-		}
-		if(out != null){
-			out.close();
-		}
-		super.finalize();
 	}
 }
