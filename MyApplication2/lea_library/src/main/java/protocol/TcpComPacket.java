@@ -2,13 +2,12 @@ package protocol;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.*;
-import java.net.Socket;
-import java.util.concurrent.TimeoutException;
-
-import javax.naming.TimeLimitExceededException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
 
 public class TcpComPacket extends ComPacket{
 	private SocketAddress socket = null;
@@ -56,7 +55,6 @@ public class TcpComPacket extends ComPacket{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
@@ -68,7 +66,7 @@ public class TcpComPacket extends ComPacket{
 				in.read(buffer);
 				flag = false;
 			} catch (SocketTimeoutException e){
-				if(check < 3){
+				if(check < 15){
 					check++;
 					System.out.println("시간 초과?");
 				}
