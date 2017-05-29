@@ -9,13 +9,15 @@ public class Comunication extends Thread{
     private String dn = null;
     private String port = null;
     private int seq_num = 0;
+    private int id = 0;
     private Packet send = null;
     private Packet recive = null;
     private boolean flag = true;
 
-    public Comunication(String dn, String port) {
+    public Comunication(String dn, String port,byte id) {
         this.dn = new String(dn);
         this.port = new String(port);
+        this.id = id;
         flag = true;
     }
 
@@ -26,12 +28,15 @@ public class Comunication extends Thread{
         }
         send = new Packet();
         send.setCode(OperationCode.Join);
-        send.setData();
+        send.setId(id);
+        comPacket.send(send.getPacket());
         comPacket.setProcess(new PacketProcess() {
             @Override
             public void doProcess() {
+                recive = comPacket.receive();
                 switch (recive.getCode()){
                     case OperationCode.Reponse:
+                        seq_num = recive.getNonce();
                         break;
                 }
             }

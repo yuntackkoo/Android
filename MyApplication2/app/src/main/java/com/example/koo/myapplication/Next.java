@@ -4,20 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.SimpleFormatter;
 
 import log.LogData;
 
@@ -39,7 +32,7 @@ public class Next extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 byte tmp = (byte)Integer.parseInt(did.getText().toString());
-                LogData log = new LogData(Integer.parseInt(date.getText().toString()),tmp);
+                LogData log = new LogData(tmp);
                 ssddb.insert(log);
             }
         });
@@ -68,8 +61,6 @@ class SsdDB extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
-        db.execSQL("CREATE TALBE USER(USER_USER_ID INTEGER,USER_USER_NAME TEXT);");
-        db.execSQL("CREATE TABLE DEVICE(DEVICE_DEVICE_ID INTEGER,DEVICE_DEVICE_NAME TEXT);");
     }
 
     @Override

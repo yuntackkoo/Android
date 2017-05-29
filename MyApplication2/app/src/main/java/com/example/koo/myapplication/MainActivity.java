@@ -7,22 +7,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import config.ConfigData;
+import protocol.Comunication;
 
 public class MainActivity extends AppCompatActivity {
-    ObjectOutputStream oout = null;
-    ObjectInputStream oin = null;
-    FileOutputStream fout = null;
     Intent next = null;
     EditText input = null;
     EditText output = null;
     TextView result = null;
     ConfigDataManager dmgr = null;
     ConfigData data = null;
+    Comunication com = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         result = (TextView) findViewById(R.id.result);
         Intent service = new Intent(getApplicationContext(),BackGround.class);
         //startService(service);
-
     }
 
     public void save(View view){
@@ -66,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
             stringBuffer.append(s + " ");
         }
         result.setText(stringBuffer);
+    }
+
+    public void turnOn(View view){
+        startActivity(next);
+    }
+
+    public void testOff(View view){
+        com = new Comunication("192.168.43.153","255",(byte)0);
+        com.start();
     }
 
     public void log(View view){

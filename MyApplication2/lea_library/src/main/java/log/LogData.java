@@ -1,9 +1,13 @@
 package log;
 
+import java.util.Calendar;
+
 public class LogData {
 	private int date;
 	private byte id;
-	
+	public static long start = 1451574000083L;
+	private Calendar current;
+
 	public LogData(byte[] input){
 		date = ((input[0]<<24)|
 				(input[1]<<16)|
@@ -12,8 +16,13 @@ public class LogData {
 		id = input[4];
 	}
 	
-	public LogData(int date, byte id){
-		this.date = date;this.id = id;
+	public LogData(byte id){
+		this.id = id;
+		current = Calendar.getInstance();
+		long time = current.getTimeInMillis();
+		time -= start;
+		time = time/1000;
+		this.date = (int)time;
 	}
 	
 	public byte[] getByte(){
@@ -23,7 +32,6 @@ public class LogData {
 		returnbyte[2] = (byte)((this.date & 0x0000FF00)>>8);
 		returnbyte[3] = (byte)((this.date & 0x000000FF));
 		returnbyte[4] = this.id;
-		
 		return returnbyte;
 	}
 
