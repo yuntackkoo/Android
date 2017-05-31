@@ -59,10 +59,25 @@
             android:onClick="turnOn"/>
 
         <Button
-            android:id="@+id/turnOff"
+            android:id="@+id/Connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="off"
-            android:onClick="testOff"/>
+            android:onClick="testOff"
+            android:text="connect" />
+
+        <EditText
+            android:id="@+id/sendText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:onClick="send"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

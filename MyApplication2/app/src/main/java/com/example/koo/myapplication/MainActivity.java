@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     ConfigDataManager dmgr = null;
     ConfigData data = null;
     Comunication com = null;
+    EditText sendbyte = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         dmgr = ConfigDataManager.getInstance(this);
         this.data = dmgr.getData();
         result = (TextView) findViewById(R.id.result);
+        sendbyte = (EditText) findViewById(R.id.sendText);
         Intent service = new Intent(getApplicationContext(),BackGround.class);
         //startService(service);
     }
@@ -69,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
     public void testOff(View view){
         com = new Comunication("192.168.43.174","255",(byte)0);
         com.start();
+    }
+
+    public void send(View view){
+        com.send(sendbyte.getText().toString().getBytes());
     }
 
     public void log(View view){

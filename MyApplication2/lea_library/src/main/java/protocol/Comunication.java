@@ -42,4 +42,10 @@ public class Comunication extends Thread{
             }
         });
     }
+
+    public void send(byte[] send) {
+        if(comPacket != null){
+            comPacket.send(send);
+        }
+    }
 }
