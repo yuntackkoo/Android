@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testOff(View view){
-        com = new Comunication("192.168.43.153","255",(byte)0);
+        com = new Comunication("192.168.43.174","255",(byte)0);
         com.start();
     }
 
