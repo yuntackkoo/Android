@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import config.ConfigData;
 import protocol.Comunication;
+import protocol.Packet;
 
 public class MainActivity extends AppCompatActivity {
     Intent next = null;
@@ -74,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void send(View view){
-        com.send(sendbyte.getText().toString().getBytes());
+        Packet p = new Packet();
+        p.setData(sendbyte.getText().toString().getBytes());
+        com.send(p);
     }
 
     public void log(View view){

@@ -37,23 +37,27 @@ public class TcpComPacket extends ComPacket{
 	}
 
 	@Override
-	public void send(byte[] send) {
+	public void send(Packet send) {
 		try {
-			out.write(send);
+			//byte[] tmp = super.getCryptoModule().enCrypt(send);
+			out.write(send.getPacket());
 			out.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			//tmp = null;
 		}
 	}
 
 	@Override
-	public Packet receive() {
+	public void receive() {
 		int check = 0;
 		boolean flag = true;
 		for(;flag;){
 			try {
 				in.read(buffer);
+				super.setCurrent(new Packet(buffer));
 				flag = false;
 			} catch (SocketTimeoutException e){
 				if(check < 15){
@@ -70,11 +74,12 @@ public class TcpComPacket extends ComPacket{
 			}
 		}
 		this.process.doProcess();
-		return null;
+		super.setCurrent(null);
 	}
 
 	@Override
 	public void setProcess(PacketProcess process) {
 		this.process = process;
 	}
+
 }

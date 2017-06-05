@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Packet {
 	private byte code;
-	private byte id;
-	private List<Byte> data = new LinkedList<Byte>();
 	private byte padding_size;
 	private byte[] padding = null;
+	private byte id;
 	private byte[] nonce = new byte[4];
+	private List<Byte> data = new LinkedList<Byte>();
 	public static final int PacketSize = 32;
 
 	public byte getCode() {
@@ -128,6 +128,14 @@ public class Packet {
 		this.padding = new byte[padding_size];
 		for(int i=0;i<this.padding_size;i++){
 			this.padding[i] = (byte) (Math.random() * 256);
+		}
+	}
+
+	public boolean comp(int seq_num){
+		if(this.getNonce() == seq_num){
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
