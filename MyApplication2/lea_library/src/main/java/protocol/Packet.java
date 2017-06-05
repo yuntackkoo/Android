@@ -24,8 +24,12 @@ public class Packet {
 	public void setId(int id) {
 		this.id = (byte)id;
 	}
-	public List<Byte> getData() {
-		return data;
+	public byte[] getData() {
+		byte[] tmp = new byte[this.data.size()];
+		for (int i=0;i<this.data.size();i++){
+			tmp[i] = this.data.get(i);
+		}
+		return tmp;
 	}
 
 	public Packet(){
@@ -126,5 +130,4 @@ public class Packet {
 			this.padding[i] = (byte) (Math.random() * 256);
 		}
 	}
-
 }

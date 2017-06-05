@@ -35,12 +35,26 @@ public class Comunication extends Thread{
             public void doProcess() {
                 recive = comPacket.receive();
                 switch (recive.getCode()){
+                    //응답
                     case OperationCode.Reponse:
                         seq_num = recive.getNonce();
                         break;
+                    //초기 등록 또는 추가 등록시 키교환 확인
+                    case OperationCode.Confirm_KeyEx:
+
+                        break;
+                    //키 교환 요구 받을시 키 제공
+                    case OperationCode.KeyOffer:
+                        comPacket.getCryptoModule().setKey(recive.getData());
+                        break;
+                    //로그 요청 받을시 로그 응답
+                    case OperationCode.Offer_Data:
+                        break;
                 }
+                seq_num++;
             }
-        });
+        }
+        );
     }
 
     public void send(byte[] send) {

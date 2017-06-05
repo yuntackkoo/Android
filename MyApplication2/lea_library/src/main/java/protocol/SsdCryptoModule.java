@@ -119,4 +119,9 @@ public class SsdCryptoModule {
 	public byte[] getKey() {
 		return key;
 	}
+
+	public void setKey(byte[] key) {
+		this.key = new byte[key.length];
+		System.arraycopy(this.key,0,key,0,key.length);
+	}
 }

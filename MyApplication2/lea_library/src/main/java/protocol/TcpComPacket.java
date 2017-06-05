@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
@@ -13,7 +12,6 @@ import java.net.SocketTimeoutException;
 public class TcpComPacket extends ComPacket{
 	private SocketAddress socket = null;
 	private java.net.Socket tcp_send = null;
-	private ServerSocket soc = null;
 	private BufferedOutputStream out = null;
 	private BufferedInputStream in = null;
 	private byte[] buffer = new byte[32];
@@ -73,10 +71,6 @@ public class TcpComPacket extends ComPacket{
 		}
 		this.process.doProcess();
 		return null;
-	}
-
-	public byte[] getBuffer() {
-		return buffer;
 	}
 
 	@Override
