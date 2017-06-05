@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:background="#FFFFFF"
+    android:layout_width="280dp" android:layout_height="400dp"
+    android:layout_gravity="center" android:gravity="center_horizontal"
+    android:paddingTop="10dp">
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="10dp" android:paddingTop="10dp"
+        android:text="모터 각 조절 (숫자)" android:textSize="20sp"
+        android:textColor="#4db6ac" android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="220dp" android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:text="" android:textSize="20sp"
+        android:textColor="#21c0ff"
+        android:id="@+id/input_motor"
+        android:singleLine="true"
+        android:lines="1" />
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="10dp" android:paddingTop="10dp"
+        android:text="사용자 이름" android:textSize="20sp"
+        android:textColor="#4db6ac" android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="220dp" android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:text="" android:textSize="20sp"
+        android:textColor="#21c0ff"
+        android:id="@+id/input_username"
+        android:singleLine="true"
+        android:lines="1" />
+
+    <TextView
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="10dp" android:paddingTop="10dp"
+        android:text="기기 이름" android:textSize="20sp"
+        android:textColor="#4db6ac" android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="220dp" android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:text="" android:textSize="20sp"
+        android:textColor="#21c0ff"
+        android:id="@+id/input_devname"
+        android:singleLine="true"
+        android:lines="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="60dp"
+        android:orientation="horizontal" android:layout_marginTop="25dp" >
+
+        <Button
+            android:layout_marginLeft="20dp" style="?android:attr/borderlessButtonStyle"
+            android:layout_width="100dp" android:layout_height="50dp"
+            android:background="@drawable/buttonshape"
+
+            android:text="취소" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
+
+            android:onClick="onClick_altercancle" />
+
+        <Button
+            android:layout_marginLeft="40dp" style="?android:attr/borderlessButtonStyle"
+            android:layout_width="100dp" android:layout_height="50dp"
+            android:background="@drawable/buttonshape"
+
+            android:text="변경" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
+
+            android:onClick="onClick_alterdevice" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#21c0ff</color> <!-- 주 색상 -->
+    <color name="colorPrimaryDark">#21c0ff</color> <!-- 상태바 색상 -->
+    <color name="colorAccent">#4db6ac</color> <!-- 강조 색상 -->
+    <!-- <color name="colorControlNormal"></color> 컨트롤러 색상 -->
+
+</resources>

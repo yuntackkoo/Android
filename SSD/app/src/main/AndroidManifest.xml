@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ssd.app">
+
+    <!-- 권한 등록 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- 커넥션 요구, 수락, 데이터 전송 등 블루투스 통신을 하기 위해 필요 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 디바이스 검색 시작 및 블루투스 설정 조작 -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_ssd"
+        android:label="@string/app_shortname"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <!-- 화면 회전 시 새로 onCreate 수행 방지 -->
+
+
+            <!-- 메인 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".History"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="히스토리" />
+        <activity
+            android:name=".Devlist"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="기기 목록" />
+        <activity
+            android:name=".Applock"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="보안 설정" />
+        <activity
+            android:name=".Settings"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="기기 관리"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".AddDevice"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="기기 추가"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+    </application>
+
+</manifest>

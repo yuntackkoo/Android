@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="#FFFFFF"
+    tools:context="ssd.app.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/device"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            />
+        <Spinner
+            android:id="@+id/user"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:text="사용자"
+            />
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:text="날짜"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/devicedata"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:text=""
+            />
+        <TextView
+            android:id="@+id/userdata"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:text=""
+            />
+        <TextView
+            android:id="@+id/datedata"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:text=""
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

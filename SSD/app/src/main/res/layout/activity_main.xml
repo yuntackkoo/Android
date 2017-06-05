@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer">
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        tools:context="ssd.app.MainActivity">
+
+        <ImageButton
+            android:layout_width="225dp" android:layout_height="225dp"
+            android:layout_marginTop="50dp" android:layout_gravity="center_horizontal"
+            android:src="@drawable/bt_unlock"
+            android:scaleType="centerCrop"
+            android:background="@drawable/imagebtshape"
+
+            android:onClick="onClick_btunlock" />
+
+        <Button
+            android:layout_width="220dp" android:layout_height="60dp"
+            android:layout_marginTop="320dp" android:layout_gravity="center_horizontal"
+            android:background="@drawable/buttonshape"
+
+            android:text="기기 목록" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
+
+            android:onClick="onClick_devlist" />
+
+        <Button
+            android:layout_width="220dp" android:layout_height="60dp"
+            android:layout_marginTop="420dp" android:layout_gravity="center_horizontal"
+            android:background="@drawable/buttonshape"
+
+            android:text="히스토리" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
+
+            android:onClick="onClick_history" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical" android:background="#FFFFFF"
+        android:layout_width="280dp" android:layout_height="match_parent"
+        android:layout_gravity="start" android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="환경설정" />
+
+        <Switch
+            android:layout_width="220dp" android:layout_height="100dp"
+            android:layout_marginTop="30dp" android:layout_gravity="center_horizontal"
+            android:text="기기 자동 연동" android:textSize="15sp"
+            android:textColor="@color/colorPrimaryDark"
+
+            android:id="@+id/switch_autolinkage" />
+
+        <Switch
+            android:layout_width="220dp" android:layout_height="100dp"
+            android:layout_marginTop="0dp" android:layout_gravity="center_horizontal"
+            android:text="보안 설정" android:textSize="15sp"
+            android:textColor="@color/colorPrimaryDark"
+
+            android:id="@+id/switch_pw" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

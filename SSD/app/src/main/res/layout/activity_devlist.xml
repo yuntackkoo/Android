@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context="ssd.app.MainActivity">
+
+    <ListView
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:id="@+id/lv_devlist" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right" android:layout_margin="20dp"
+        android:src="@drawable/ic_add" android:onClick="onClick_add_device"
+
+        app:backgroundTint="#4db6ac" app:borderWidth="0dp"
+        app:elevation="6dp" app:fabSize="normal" />
+
+    <!--<Button
+        android:layout_width="120dp" android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" android:layout_marginTop="5dp"
+        android:background="@drawable/buttonshape"
+
+        android:text="Add List" android:textSize="20sp"
+        android:textColor="#21c0ff" android:textStyle="bold"
+
+        android:onClick="onClick_add_device"
+        /> -->
+
+    <!--<Button
+        android:layout_marginLeft="35dp"
+        android:layout_width="150dp" android:layout_height="wrap_content"
+        android:background="@drawable/buttonshape"
+
+        android:text="Remove List" android:textSize="20sp"
+        android:textColor="#21c0ff" android:textStyle="bold"
+
+        android:id="@+id/lv_removeBt" />-->
+
+</FrameLayout>
