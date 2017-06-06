@@ -5,6 +5,7 @@ import java.util.Calendar;
 public class LogData {
 	private int date;
 	private byte id;
+	private byte devid;
 	public static long start = 1451574000083L;
 	private Calendar current;
 
@@ -50,6 +51,12 @@ public class LogData {
 	public void setId(byte id) {
 		this.id = id;
 	}
-	
-	
+
+	public byte getDevid() {
+		return devid;
+	}
+
+	public void setDevid(byte devid) {
+		this.devid = devid;
+	}
 }

@@ -41,7 +41,7 @@ public class AddDevice extends Activity {
         input_devname = edit_devname.getText().toString();
         input_port = edit_port.getText().toString();
 
-        db.addDevice(input_username,input_ip,input_port);
+        db.addDevice(input_devname,input_ip,input_port);
 
         finish();
 

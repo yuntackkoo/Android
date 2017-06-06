@@ -64,6 +64,15 @@ public class SsdDB extends SQLiteOpenHelper {
         return list;
     }
 
+    //로그 삭제 지금은 테스트용으로 디바이스 목록 삭제
+    public void logDel(){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE DEVICE;");
+        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
+                "DEVICE_PORT INTEGER);");
+        db.close();
+    }
+
     public String read(){
         StringBuffer result = new StringBuffer();
         SQLiteDatabase db = getReadableDatabase();

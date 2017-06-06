@@ -110,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent_settings);
     }
 
+    public void onClick_logdel(View view) {
+        SsdDB db = new SsdDB(this,SsdDB.DBNAME,null,1);
+        db.logDel();
+    }
+
     private class BtTask extends AsyncTask {
 
          protected void onPreExecute() {

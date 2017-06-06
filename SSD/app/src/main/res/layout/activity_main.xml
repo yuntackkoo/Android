@@ -70,8 +70,14 @@
             android:layout_marginTop="0dp" android:layout_gravity="center_horizontal"
             android:text="보안 설정" android:textSize="15sp"
             android:textColor="@color/colorPrimaryDark"
-
             android:id="@+id/switch_pw" />
+
+        <Button
+            android:id="@+id/logdel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그삭제"
+            android:onClick="onClick_logdel"/>
 
     </LinearLayout>
 
