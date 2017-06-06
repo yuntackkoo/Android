@@ -17,19 +17,28 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import config.ConfigData;
+
 public class MainActivity extends AppCompatActivity {
 
     public AsyncTask btTask;
     DrawerLayout mDrawer;
     Switch sw_pw;
+    Switch sw_auto;
+    ConfigData config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        config = ConfigDataManager.getInstance(this).getData();
 
         sw_pw = (Switch) findViewById(R.id.switch_pw);
+        sw_auto = (Switch) findViewById(R.id.switch_autoupdate);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+
+        sw_pw.setChecked(config.isLock());
+        sw_auto.setChecked(config.isAuto_update());
 
         sw_pw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -54,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 dialog_SetPW.show();
-
             }
         });
     }
@@ -136,7 +144,21 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e) { }
 
+        if(config != null){
+            config.setAuto_update(sw_auto.isChecked());
+            config.setLock(sw_pw.isChecked());
+            ConfigDataManager.getInstance(this).saveData(config);
+        }
         super.onDestroy();
     }
 
+    @Override
+    protected void onPause() {
+        if(config != null){
+            config.setAuto_update(sw_auto.isChecked());
+            config.setLock(sw_pw.isChecked());
+            ConfigDataManager.getInstance(this).saveData(config);
+        }
+        super.onPause();
+    }
 }

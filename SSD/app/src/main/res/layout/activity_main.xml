@@ -55,12 +55,15 @@
             android:text="환경설정" />
 
         <Switch
-            android:layout_width="220dp" android:layout_height="100dp"
-            android:layout_marginTop="30dp" android:layout_gravity="center_horizontal"
-            android:text="기기 자동 연동" android:textSize="15sp"
+            android:id="@+id/switch_autoupdate"
+            android:layout_width="220dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="기기 자동 연동"
             android:textColor="@color/colorPrimaryDark"
 
-            android:id="@+id/switch_autolinkage" />
+            android:textSize="15sp" />
 
         <Switch
             android:layout_width="220dp" android:layout_height="100dp"
