@@ -39,6 +39,7 @@ public class SsdDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    //디바이스를 추가 이름,주소,포트
     public void addDevice(String name,String addr,String port){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO DEVICE (DEVICE_NAME,DEVICE_ADDR,DEVICE_PORT) " +
@@ -46,9 +47,9 @@ public class SsdDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    //디바이스 목록을 조회
     public ArrayList<String> getDeviceList(){
         ArrayList<String> list = new ArrayList<>();
-        list.add("기기");
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT DEVICE_NAME FROM DEVICE",null);
         for(;cur.moveToNext();){
@@ -57,9 +58,9 @@ public class SsdDB extends SQLiteOpenHelper {
         return list;
     }
 
+    //유저 목록을 조회
     public ArrayList<String> getUserList(){
         ArrayList<String> list = new ArrayList<>();
-        list.add("유저");
         return list;
     }
 

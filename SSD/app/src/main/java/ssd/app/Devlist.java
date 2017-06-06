@@ -18,7 +18,8 @@ public class Devlist extends AppCompatActivity {
     static ListView lv_Devlist;
     static ArrayList<String> lv_items;
     static ListViewAdapter lv_Adapter;
-    SharedPreferences mPref;
+    SsdDB db;
+    ArrayList<String> dlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +29,16 @@ public class Devlist extends AppCompatActivity {
         lv_Devlist = (ListView) findViewById(R.id.lv_devlist);
         lv_items = new ArrayList<String>();
         lv_Adapter = new ListViewAdapter();
+        db = new SsdDB(this.getApplicationContext(),SsdDB.DBNAME,null,1);
+        dlist = db.getDeviceList();
+
+        //DB에서 기기목록을 불러와 출력
+        for(int i=0;i<dlist.size();i++){
+            lv_Adapter.addItem(dlist.get(i));
+        }
 
         //리스트뷰에 저장될 텍스트
         lv_Devlist.setAdapter(lv_Adapter);
-        //LoadPref();
 
         lv_Devlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

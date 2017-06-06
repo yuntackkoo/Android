@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class History extends AppCompatActivity {
     Spinner device = null;
     Spinner user = null;
@@ -19,6 +21,8 @@ public class History extends AppCompatActivity {
     SsdDB db = null;
     ArrayAdapter<String> arrad_d = null;
     ArrayAdapter<String> arrad_u = null;
+    ArrayList<String> dlist = null;
+    ArrayList<String> ulist = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +35,14 @@ public class History extends AppCompatActivity {
         userdata = (TextView)findViewById(R.id.userdata);
         datedata = (TextView)findViewById(R.id.datedata);
         db = new SsdDB(this.getApplicationContext(),SsdDB.DBNAME,null,1);
+        dlist = db.getDeviceList();
+        ulist = db.getUserList();
 
-        arrad_d = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,db.getDeviceList());
-        arrad_u = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,db.getUserList());
+        dlist.add(0,"기기");
+        ulist.add(0,"유저");
+
+        arrad_d = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,dlist);
+        arrad_u = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,ulist);
         device.setAdapter(arrad_d);
         user.setAdapter(arrad_u);
     }
