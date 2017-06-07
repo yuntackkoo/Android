@@ -40,6 +40,13 @@ public class Devlist extends AppCompatActivity {
         //리스트뷰에 저장될 텍스트
         lv_Devlist.setAdapter(lv_Adapter);
 
+        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                
+            }
+        });
+
         lv_Devlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -47,7 +54,7 @@ public class Devlist extends AppCompatActivity {
                 startActivity(intent_settings);
                 return true;
             }
-           });
+        });
 
     }
 
