@@ -17,7 +17,7 @@
         <Spinner
             android:id="@+id/device"
             android:layout_width="0dp"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
             android:layout_height="40dp"
             android:textSize="20sp"
             android:textAlignment="center"
@@ -51,7 +51,7 @@
         <TextView
             android:id="@+id/devicedata"
             android:layout_width="0dp"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:textAlignment="center"
