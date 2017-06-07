@@ -98,13 +98,9 @@ public class Devlist extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        lv_Adapter.removeAll();
-        super.onPause();
-    }
-
-    @Override
     protected void onResume() {
+        lv_Adapter.removeAll();
+
         dlist = db.getDeviceList();
 
         //DB에서 기기목록을 불러와 출력
@@ -112,6 +108,7 @@ public class Devlist extends AppCompatActivity {
             lv_Adapter.addItem(dlist.get(i));
         }
 
+        lv_Adapter.notifyDataSetChanged();
         dlist = null;
         super.onResume();
     }

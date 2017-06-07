@@ -99,9 +99,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     public void removeAll() {
-        for(int i=0;i<getCount()+1;i++){
-            listViewItemList.remove(i);
-        }
+        listViewItemList.clear();
         notifyDataSetChanged();
     }
 
