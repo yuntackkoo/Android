@@ -7,7 +7,6 @@ import android.view.Window;
 import android.widget.EditText;
 
 import static ssd.app.Devlist.lv_Adapter;
-import static ssd.app.Devlist.lv_items;
 
 public class Settings extends Activity {
 
@@ -37,7 +36,7 @@ public class Settings extends Activity {
     }
 
     public void add_Listview (String a, String b, String c) {
-        lv_items.add(c);
+        lv_Adapter.addItem(c);
         lv_Adapter.notifyDataSetChanged();
     }
 }

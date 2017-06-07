@@ -98,4 +98,11 @@ public class ListViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeAll() {
+        for(int i=0;i<getCount()+1;i++){
+            listViewItemList.remove(i);
+        }
+        notifyDataSetChanged();
+    }
+
 }

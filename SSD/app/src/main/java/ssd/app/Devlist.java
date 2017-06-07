@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Devlist extends AppCompatActivity {
 
     static ListView lv_Devlist;
-    static ArrayList<String> lv_items;
     static ListViewAdapter lv_Adapter;
     MenuItem delete_btn;
     SsdDB db;
@@ -27,9 +26,16 @@ public class Devlist extends AppCompatActivity {
         setContentView(R.layout.activity_devlist);
 
         lv_Devlist = (ListView) findViewById(R.id.lv_devlist);
-        lv_items = new ArrayList<String>();
         lv_Adapter = new ListViewAdapter();
         db = new SsdDB(this.getApplicationContext(),SsdDB.DBNAME,null,1);
+
+        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
         dlist = db.getDeviceList();
 
         //DB에서 기기목록을 불러와 출력
@@ -39,13 +45,6 @@ public class Devlist extends AppCompatActivity {
 
         //리스트뷰에 저장될 텍스트
         lv_Devlist.setAdapter(lv_Adapter);
-
-        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
 
         lv_Devlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -98,61 +97,22 @@ public class Devlist extends AppCompatActivity {
         startActivity(intent_adddevice);
     }
 
-    /*
-    Button lv_addBt = (Button) findViewById(R.id.lv_addBt);
-    lv_addBt.setOnClickListener(new Button.OnClickListener() {
-        @Override
-            public void onClick(View v) {
-                int count;
-                count = lv_Adapter.getCount();
-                lv_items.add("LIST" + Integer.toString(count+1));
-                lv_Adapter.notifyDataSetChanged();
-
-                SavePref("LIST" + Integer.toString(count+1), "LIST" + Integer.toString(count+1));
-            }
-    });
-
-    Button lv_removeBt = (Button) findViewById(R.id.lv_removeBt);
-    lv_removeBt.setOnClickListener(new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int count, checked;
-            count = lv_Adapter.getCount();
-            if(count> 0) {
-                checked= lv_Devlist.getCheckedItemPosition();
-
-                if(checked> -1 && checked<count) {
-                    lv_items.remove(checked);
-                    lv_Devlist.clearChoices();
-                    lv_Adapter.notifyDataSetChanged();
-                }
-
-                SavePref("LIST" + Integer.toString(count+1), "LIST" + Integer.toString(count+1));
-            }
-        }
-    });
-
-    protected void SavePref(String key, String value) {
-        mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor edit = mPref.edit();
-        int i;
-        for (i=0; i<lv_Adapter.getCount(); i++) {
-            edit.putString(key, value);
-        }
-        edit.putInt("count", i);
-        edit.commit();
+    @Override
+    protected void onPause() {
+        lv_Adapter.removeAll();
+        super.onPause();
     }
 
-    protected void LoadPref() {
-        mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        int j=mPref.getInt("count", 0);
+    @Override
+    protected void onResume() {
+        dlist = db.getDeviceList();
 
-        for(int i=0;i<j;i++) {
-            lv_Adapter.add(mPref.getString("LIST" + Integer.toString(i+1),
-                    "LIST" + Integer.toString(i+1)));
+        //DB에서 기기목록을 불러와 출력
+        for(int i=0;i<dlist.size();i++){
+            lv_Adapter.addItem(dlist.get(i));
         }
-        lv_Adapter.notifyDataSetChanged();
-    }
-    */
 
+        dlist = null;
+        super.onResume();
+    }
 }
