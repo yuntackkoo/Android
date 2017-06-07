@@ -10,7 +10,7 @@ public class Packet {
 	private byte id;
 	private byte[] nonce = new byte[4];
 	private List<Byte> data = new LinkedList<Byte>();
-	public static final int PacketSize = 32;
+	public static final int PacketSize = 33;
 
 	public byte getCode() {
 		return code;
@@ -104,11 +104,11 @@ public class Packet {
 			tmp.add(this.padding[i]);
 		}
 
+		tmp.add(this.id);
+
 		for(int i=0;i<this.nonce.length;i++)		{
 			tmp.add(this.nonce[i]);
 		}
-
-		tmp.add(this.id);
 
 		for(int i=0;i<this.data.size();i++)		{
 			tmp.add(this.data.get(i));

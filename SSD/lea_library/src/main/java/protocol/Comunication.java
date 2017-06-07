@@ -30,7 +30,6 @@ public class Comunication extends Thread{
         send = new Packet();
         send.setCode(OperationCode.Join);
         send.setId(id);
-        send.fillPadding();
         comPacket.send(send);
         comPacket.setProcess(new PacketProcess() {
             @Override

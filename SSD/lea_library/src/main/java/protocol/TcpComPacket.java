@@ -40,6 +40,7 @@ public class TcpComPacket extends ComPacket{
 	public void send(Packet send) {
 		try {
 			//byte[] tmp = super.getCryptoModule().enCrypt(send);
+			send.fillPadding();
 			out.write(send.getPacket());
 			out.flush();
 		} catch (IOException e) {
