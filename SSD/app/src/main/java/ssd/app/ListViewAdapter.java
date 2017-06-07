@@ -1,17 +1,19 @@
 package ssd.app;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
-    private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
+    static ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
     static boolean mCheckBoxState=false;
 
     // ListViewAdapter의 생성자
@@ -45,10 +47,12 @@ public class ListViewAdapter extends BaseAdapter {
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
         TextView titleView = (TextView) convertView.findViewById(R.id.custom_text);
         CheckBox checkboxView = (CheckBox) convertView.findViewById(R.id.custom_checkbox);
+        checkboxView.setChecked(((ListView)parent).isItemChecked(position));
+
         if (mCheckBoxState) { checkboxView.setVisibility(View.VISIBLE); }
         else if (!mCheckBoxState) {
             checkboxView.setVisibility(View.GONE);
-            checkboxView.setChecked(false);
+            //checkboxView.setChecked(false);
         }
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
@@ -72,13 +76,26 @@ public class ListViewAdapter extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
-    // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
+
+    // 아이템 데이터 추가를 위한 함수.
     public void addItem(String title) {
         ListViewItem item = new ListViewItem();
 
         item.setTitle(title);
 
         listViewItemList.add(item);
+    }
+
+    public void removeItem(ListView lv) {
+        SparseBooleanArray checkedItems = lv.getCheckedItemPositions();
+        int count = getCount();
+        for(int i=count-1; i>=0; i--) {
+            if(checkedItems.get(i)) {
+                listViewItemList.remove(i);
+            }
+        }
+        lv.clearChoices();
+        notifyDataSetChanged();
     }
 
 }

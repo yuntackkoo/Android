@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SSD.iml" filepath="$PROJECT_DIR$/SSD.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SSD.iml" filepath="$PROJECT_DIR$/SSD.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lea_library/lea_library.iml" filepath="$PROJECT_DIR$/lea_library/lea_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/lea_library/lea_library.iml" filepath="$PROJECT_DIR$/lea_library/lea_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/lea_library/lea_library.iml" filepath="$PROJECT_DIR$/lea_library/lea_library.iml" />
     </modules>

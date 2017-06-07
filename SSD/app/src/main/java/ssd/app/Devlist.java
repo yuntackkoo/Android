@@ -1,7 +1,6 @@
 package ssd.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +17,7 @@ public class Devlist extends AppCompatActivity {
     static ListView lv_Devlist;
     static ArrayList<String> lv_items;
     static ListViewAdapter lv_Adapter;
+    MenuItem delete_btn;
     SsdDB db;
     ArrayList<String> dlist;
 
@@ -55,18 +55,32 @@ public class Devlist extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_delete, menu);
+        delete_btn = (MenuItem) menu.findItem(R.id.menu_delete);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        delete_btn.setVisible(false);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
+                lv_Adapter.removeItem(lv_Devlist);
+            case R.id.menu_setmenu:
                 if (lv_Adapter.mCheckBoxState == false) {
+
                     lv_Adapter.setCheckBoxState(true);
+                    delete_btn.setVisible(true);
                 } else {
+
                     lv_Adapter.setCheckBoxState(false);
+                    delete_btn.setVisible(false);
                 }
         }
         return true;
