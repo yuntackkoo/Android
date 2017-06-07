@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import log.LogData;
 
@@ -71,6 +73,19 @@ public class SsdDB extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
                 "DEVICE_PORT INTEGER);");
         db.close();
+    }
+
+    public Map<String,String> deviceSerch(String name){
+        Map<String,String> tmp = new HashMap<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DEVICE_ID,DEVICE_ADDR,DEVICE_PORT FROM DEVICE WHERE DEVICE_NAME = '" + name + "';",null);
+        cursor.moveToFirst();
+        Byte b = new Byte((byte)cursor.getInt(0));
+        tmp.put("id",b.toString());
+        tmp.put("addr",cursor.getString(1));
+        tmp.put("port",cursor.getString(2));
+        db.close();
+        return tmp;
     }
 
     public String read(){

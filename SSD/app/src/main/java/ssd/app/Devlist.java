@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Map;
+
+import protocol.Comunication;
 
 public class Devlist extends AppCompatActivity {
 
@@ -28,13 +31,6 @@ public class Devlist extends AppCompatActivity {
         lv_Devlist = (ListView) findViewById(R.id.lv_devlist);
         lv_Adapter = new ListViewAdapter();
         db = new SsdDB(this.getApplicationContext(),SsdDB.DBNAME,null,1);
-
-        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
 
         dlist = db.getDeviceList();
 
@@ -55,6 +51,15 @@ public class Devlist extends AppCompatActivity {
             }
         });
 
+        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = lv_Adapter.getItemName(position);
+                Map<String,String> tmp = db.deviceSerch(name);
+                Comunication com = new Comunication(tmp.get("addr").toString(),tmp.get("port").toString(),Byte.parseByte(tmp.get("id").toString()));
+                com.start();
+            }
+        });
     }
 
     @Override

@@ -27,13 +27,11 @@ public class Comunication extends Thread{
         if(flag) {
             comPacket = new TcpComPacket(dn, port);
         }
-
         send = new Packet();
         send.setCode(OperationCode.Join);
         send.setId(id);
         send.fillPadding();
         comPacket.send(send);
-        comPacket.receive();
         comPacket.setProcess(new PacketProcess() {
             @Override
             public void doProcess() {
@@ -66,6 +64,7 @@ public class Comunication extends Thread{
 
         }
         );
+        comPacket.receive();
     }
 
     public void send(Packet send) {
@@ -75,5 +74,4 @@ public class Comunication extends Thread{
             comPacket.send(send);
         }
     }
-
 }

@@ -76,6 +76,8 @@ public class ListViewAdapter extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
+    public String getItemName(int position) {return listViewItemList.get(position).getTitle();}
+
 
     // 아이템 데이터 추가를 위한 함수.
     public void addItem(String title) {
