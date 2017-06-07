@@ -43,7 +43,7 @@ public class Devlist extends AppCompatActivity {
         lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                
+
             }
         });
 
