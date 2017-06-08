@@ -29,11 +29,9 @@ public class TcpComPacket extends ComPacket{
 			tcp_send.setSoTimeout(1000);
 		}
 		catch (ConnectException e){
-
 		}
 		catch(IOException e){
 		}
-
 	}
 
 	@Override
@@ -41,8 +39,10 @@ public class TcpComPacket extends ComPacket{
 		try {
 			//byte[] tmp = super.getCryptoModule().enCrypt(send);
 			send.fillPadding();
-			out.write(send.getPacket());
-			out.flush();
+			if(isConnect()) {
+				out.write(send.getPacket());
+				out.flush();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,7 +57,9 @@ public class TcpComPacket extends ComPacket{
 		boolean flag = true;
 		for(;flag;){
 			try {
-				in.read(buffer);
+				if(isConnect()) {
+					in.read(buffer);
+				} else break;
 				super.setCurrent(new Packet(buffer));
 				flag = false;
 			} catch (SocketTimeoutException e){
@@ -83,4 +85,8 @@ public class TcpComPacket extends ComPacket{
 		this.process = process;
 	}
 
+	@Override
+	public boolean isConnect() {
+		return tcp_send.isConnected();
+	}
 }

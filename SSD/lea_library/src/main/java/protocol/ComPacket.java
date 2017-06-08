@@ -22,4 +22,6 @@ public abstract class ComPacket {
 	public void setCurrent(Packet current) {
 		this.current = current;
 	}
+
+	abstract public boolean isConnect();
 }

@@ -1,5 +1,7 @@
 package ssd.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,7 +19,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import java.util.Map;
+
 import config.ConfigData;
+import protocol.Comunication;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Switch sw_pw;
     Switch sw_auto;
     ConfigData config;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +67,12 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-
                 dialog_SetPW.show();
             }
         });
+
+        Intent service = new Intent(this,MyService.class);
+        startService(service);
     }
 
     @Override

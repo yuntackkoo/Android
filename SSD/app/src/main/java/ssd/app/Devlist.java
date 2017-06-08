@@ -1,7 +1,13 @@
 package ssd.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,8 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import protocol.Comunication;
 
@@ -19,9 +28,10 @@ public class Devlist extends AppCompatActivity {
 
     static ListView lv_Devlist;
     static ListViewAdapter lv_Adapter;
-    MenuItem delete_btn;
-    SsdDB db;
-    ArrayList<String> dlist;
+    private MenuItem delete_btn;
+    private SsdDB db;
+    private ArrayList<String> dlist;
+    Comunication com = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +63,16 @@ public class Devlist extends AppCompatActivity {
 
         lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
                 String name = lv_Adapter.getItemName(position);
-                Map<String,String> tmp = db.deviceSerch(name);
-                Comunication com = new Comunication(tmp.get("addr").toString(),tmp.get("port").toString(),Byte.parseByte(tmp.get("id").toString()));
-                com.start();
+                Intent intent = new Intent("CONNECT").putExtra("name",name);
+                sendBroadcast(intent);
             }
         });
+    }
+
+    public void chageSta(String state, int position){
+        lv_Adapter.chageState(state,position);
     }
 
     @Override
@@ -116,5 +129,10 @@ public class Devlist extends AppCompatActivity {
         lv_Adapter.notifyDataSetChanged();
         dlist = null;
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

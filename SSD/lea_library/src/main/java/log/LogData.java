@@ -1,6 +1,7 @@
 package log;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class LogData {
 	private int date;
@@ -58,5 +59,14 @@ public class LogData {
 
 	public void setDevid(byte devid) {
 		this.devid = devid;
+	}
+
+	public static int getDate(int year,int month,int day){
+		int tmp = 0;
+		if(year >= 2016) {
+			tmp = (year * 365) + (month * 60) + day;
+			tmp += 3600;
+			return tmp;
+		} else return 0;
 	}
 }
