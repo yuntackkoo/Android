@@ -1,5 +1,6 @@
 package protocol;
 
+import java.util.ArrayList;
 import java.util.Timer;
 
 /**
@@ -23,6 +24,10 @@ public class Comunication extends Thread {
         this.port = new String(port);
         this.id = id;
         flag = true;
+    }
+
+    public byte getThisId() {
+        return (byte)id;
     }
 
     @Override
@@ -58,6 +63,10 @@ public class Comunication extends Thread {
                                 case OperationCode.Offer_Data:
                                     loging.loging();
                                     break;
+                                //다른 기기가 문을 열때
+                                case OperationCode.Unlock_Other:
+                                    loging.loging();
+                                    break;
                             }
                         }
                         seq_num++;
@@ -69,7 +78,9 @@ public class Comunication extends Thread {
         send.setCode(OperationCode.Join);
         send.setId(id);
         comPacket.send(send);
-        comPacket.receive();
+        for(;;) {
+            comPacket.receive();
+        }
     }
 
     public void send(Packet send) {
@@ -112,11 +123,8 @@ public class Comunication extends Thread {
         return flag;
     }
 
-    public Loging getLoging() {
-        return loging;
-    }
-
     public boolean isConnected() {
         return connected;
     }
+
 }

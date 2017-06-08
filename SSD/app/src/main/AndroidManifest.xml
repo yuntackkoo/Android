@@ -58,7 +58,7 @@
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
 
         <service
-            android:name=".MyService"
+            android:name=".Connection"
             android:enabled="true"
             android:exported="true">
         </service>

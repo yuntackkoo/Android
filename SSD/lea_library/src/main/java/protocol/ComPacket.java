@@ -24,4 +24,5 @@ public abstract class ComPacket {
 	}
 
 	abstract public boolean isConnect();
+
 }

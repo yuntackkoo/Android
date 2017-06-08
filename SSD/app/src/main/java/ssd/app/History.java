@@ -2,6 +2,7 @@ package ssd.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class History extends AppCompatActivity {
     Spinner device = null;
@@ -45,5 +47,16 @@ public class History extends AppCompatActivity {
         arrad_u = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,ulist);
         device.setAdapter(arrad_d);
         user.setAdapter(arrad_u);
+    }
+
+    @Override
+    protected void onResume() {
+        Map<String,String> map = db.read();
+        devicedata.setText(map.get("deviceid"));
+        Integer a = map.get("deviceid").length();
+        Log.e(a.toString(),a.toString());
+        userdata.setText(map.get("userid"));
+        datedata.setText(map.get("date"));
+        super.onResume();
     }
 }

@@ -14,7 +14,7 @@ public class TcpComPacket extends ComPacket{
 	private java.net.Socket tcp_send = null;
 	private BufferedOutputStream out = null;
 	private BufferedInputStream in = null;
-	private byte[] buffer = new byte[32];
+	private byte[] buffer = new byte[33];
 	private PacketProcess process = null;
 	private int port = 0;
 	
@@ -62,6 +62,7 @@ public class TcpComPacket extends ComPacket{
 				} else break;
 				super.setCurrent(new Packet(buffer));
 				flag = false;
+                check = 0;
 			} catch (SocketTimeoutException e){
 				if(check < 15){
 					check++;
@@ -76,7 +77,9 @@ public class TcpComPacket extends ComPacket{
 				e.printStackTrace();
 			}
 		}
-		this.process.doProcess();
+		if(isConnect()) {
+			this.process.doProcess();
+		}
 		super.setCurrent(null);
 	}
 

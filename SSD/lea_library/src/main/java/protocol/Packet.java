@@ -38,16 +38,16 @@ public class Packet {
 
 	public Packet(byte[] data){
 		int offset = 0;
-		this.code = data[offset];
-		offset++;
-		this.padding_size = data[offset];
-		offset += this.padding_size + 1;
+		this.code = data[offset++];
+		this.padding_size = data[offset++];
+		offset += this.padding_size;
+		this.id = data[offset++];
 		this.nonce[0] = data[offset+3];
 		this.nonce[1] = data[offset+2];
 		this.nonce[2] = data[offset+1];
 		this.nonce[3] = data[offset+0];
 		offset +=4;
-		for(int i=0;i<32-offset;i++){
+		for(int i=0;i<33-offset;i++){
 			this.data.add(data[i]);
 		}
 	}

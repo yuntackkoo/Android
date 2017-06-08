@@ -26,7 +26,7 @@ public class SsdDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE DATE);");
+        db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
         db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
                 "DEVICE_PORT INTEGER);");
     }
@@ -38,8 +38,16 @@ public class SsdDB extends SQLiteOpenHelper {
 
     public void insertLog(LogData log,byte id){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO LOG VALUES(" + id + "," + log.getId() + "," + log.getDate());
+        db.execSQL("INSERT INTO LOG VALUES(" + id + "," + log.getId() + "," + log.getDate() + ");");
         db.close();
+    }
+
+    public byte serchDevice(String name){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DEVICE_ID FROM DEVICE WHERE DEVICE_NAME = '" + name + "';",null);
+        cursor.moveToFirst();
+        db.close();
+        return (byte)cursor.getInt(0);
     }
 
     //디바이스를 추가 이름,주소,포트
@@ -70,12 +78,15 @@ public class SsdDB extends SQLiteOpenHelper {
     //로그 삭제 지금은 테스트용으로 디바이스 목록 삭제
     public void logDel(){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DROP TABLE DEVICE;");
-        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
-                "DEVICE_PORT INTEGER);");
+//        db.execSQL("DROP TABLE DEVICE;");
+//        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
+//                "DEVICE_PORT INTEGER);");
+        db.execSQL("DROP TABLE LOG");
+        db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
         db.close();
     }
 
+    //기기에 대한 포트와 주소를 조회
     public Map<String,String> deviceSerch(String name){
         Map<String,String> tmp = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -89,21 +100,26 @@ public class SsdDB extends SQLiteOpenHelper {
         return tmp;
     }
 
-    public String read(){
-        StringBuffer result = new StringBuffer();
+    public Map<String,String> read(){
+        StringBuffer userid = new StringBuffer();
+        StringBuffer deviceid = new StringBuffer();
+        StringBuffer date = new StringBuffer();
         SQLiteDatabase db = getReadableDatabase();
+        Map<String,String> map = new HashMap<>();
 
         Cursor cur = db.rawQuery("SELECT * FROM LOG", null);
         while (cur.moveToNext()) {
-            result.append("유저 id : ");
-            result.append(cur.getInt(0));
-            result.append("디바이스 id : ");
-            result.append(cur.getInt(1));
-            result.append("날짜 : ");
-            result.append(cur.getInt(2));
-            result.append("\n");
+            userid.append(cur.getInt(0));
+            userid.append("\n");
+            deviceid.append(cur.getInt(1));
+            deviceid.append("\n");
+            date.append(cur.getInt(2));
+            date.append("\n");
         }
+        map.put("userid",userid.toString());
+        map.put("deviceid",deviceid.toString());
+        map.put("date",date.toString());
         db.close();
-        return result.toString();
+        return map;
     }
 }
