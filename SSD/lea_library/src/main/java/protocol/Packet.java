@@ -39,7 +39,11 @@ public class Packet {
 	public Packet(byte[] data){
 		int offset = 0;
 		this.code = data[offset++];
-		this.padding_size = data[offset++];
+		if(data[offset] >= 24) {
+			this.padding_size = 24;
+		} else{
+			this.padding_size = data[offset++];
+		}
 		offset += this.padding_size;
 		this.id = data[offset++];
 		this.nonce[0] = data[offset+3];
@@ -47,7 +51,7 @@ public class Packet {
 		this.nonce[2] = data[offset+1];
 		this.nonce[3] = data[offset+0];
 		offset +=4;
-		for(int i=0;i<33-offset;i++){
+		for(int i=offset;i<PacketSize;i++){
 			this.data.add(data[i]);
 		}
 	}

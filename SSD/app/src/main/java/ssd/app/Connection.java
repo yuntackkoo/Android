@@ -106,8 +106,8 @@ public class Connection extends Service {
                             Packet p = deviceList.get(name).getRecive();
                             System.arraycopy(p.getData(),0,tmp,0,5);
                             LogData log = new LogData(tmp);
+                            Log.e(new Integer(log.getDate()).toString(),"asdf");
                             db.insertLog(log,(byte)0);
-                            Log.e("asdf","asdf");
                         }
                     }
                 });

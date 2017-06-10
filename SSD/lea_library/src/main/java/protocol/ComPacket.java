@@ -1,5 +1,7 @@
 package protocol;
 
+import java.net.SocketException;
+
 public abstract class ComPacket {
 	private PacketProcess process = null;
 	private SsdCryptoModule cryptoModule = new SsdCryptoModule();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -78,9 +79,9 @@ public class SsdDB extends SQLiteOpenHelper {
     //로그 삭제 지금은 테스트용으로 디바이스 목록 삭제
     public void logDel(){
         SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("DROP TABLE DEVICE;");
-//        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
-//                "DEVICE_PORT INTEGER);");
+        db.execSQL("DROP TABLE DEVICE;");
+        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
+                "DEVICE_PORT INTEGER);");
         db.execSQL("DROP TABLE LOG");
         db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
         db.close();

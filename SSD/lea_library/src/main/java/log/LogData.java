@@ -11,10 +11,10 @@ public class LogData {
 	private Calendar current;
 
 	public LogData(byte[] input){
-		date = ((input[0]<<24)|
-				(input[1]<<16)|
-				(input[2]<<8)|
-				(input[3]));
+		date = (((input[0] & 0xFF)<<24)|
+				((input[1] & 0xFF)<<16)|
+				((input[2] & 0xFF)<<8)|
+				(input[3] & 0xFF));
 		id = input[4];
 	}
 	

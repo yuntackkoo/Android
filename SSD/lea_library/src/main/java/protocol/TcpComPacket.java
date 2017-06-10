@@ -7,6 +7,7 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class TcpComPacket extends ComPacket{
@@ -26,11 +27,13 @@ public class TcpComPacket extends ComPacket{
 			tcp_send.connect(socket,20000);
 			in = new BufferedInputStream(tcp_send.getInputStream());
 			out = new BufferedOutputStream(tcp_send.getOutputStream());
-			tcp_send.setSoTimeout(1000);
+			tcp_send.setSoTimeout(100000);
 		}
 		catch (ConnectException e){
+			System.out.println(e.getMessage());
 		}
 		catch(IOException e){
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -42,6 +45,10 @@ public class TcpComPacket extends ComPacket{
 			if(isConnect()) {
 				out.write(send.getPacket());
 				out.flush();
+			} else{
+				if(out != null) {
+					out.close();
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -59,11 +66,22 @@ public class TcpComPacket extends ComPacket{
 			try {
 				if(isConnect()) {
 					in.read(buffer);
-				} else break;
+				} else {
+					break;
+				}
 				super.setCurrent(new Packet(buffer));
 				flag = false;
                 check = 0;
-			} catch (SocketTimeoutException e){
+			} catch (SocketException e){
+				try {
+					in.close();
+					tcp_send.close();
+					super.setCurrent(null);
+				} catch (IOException e2){
+					System.out.println("연결 해제");
+				}
+			}
+			catch (SocketTimeoutException e){
 				if(check < 15){
 					check++;
 					System.out.println("시간 초과?");
@@ -71,6 +89,7 @@ public class TcpComPacket extends ComPacket{
 				else{
 					System.out.println("시간 초과");
 					flag = false;
+
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
