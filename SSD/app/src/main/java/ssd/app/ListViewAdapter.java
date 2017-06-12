@@ -1,16 +1,16 @@
 package ssd.app;
 
 import android.content.Context;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ListView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ListViewAdapter extends BaseAdapter {
     static ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
@@ -21,6 +21,7 @@ public class ListViewAdapter extends BaseAdapter {
 
     }
 
+    //체크박스 Visible
     public void setCheckBoxState(boolean pState) {
         mCheckBoxState = pState;
         notifyDataSetChanged();
@@ -48,16 +49,23 @@ public class ListViewAdapter extends BaseAdapter {
         TextView titleView = (TextView) convertView.findViewById(R.id.custom_text);
         TextView stateView = (TextView) convertView.findViewById(R.id.devstate);
         CheckBox checkboxView = (CheckBox) convertView.findViewById(R.id.custom_checkbox);
-        checkboxView.setChecked(((ListView)parent).isItemChecked(position));
+        //((ListView)parent).setItemChecked(position,false);
+        //checkboxView.setChecked(false);
+        //checkboxView.setChecked(((ListView) parent).isItemChecked(position));
 
         if (mCheckBoxState) { checkboxView.setVisibility(View.VISIBLE); }
-        else if (!mCheckBoxState) {
-            checkboxView.setVisibility(View.GONE);
-            //checkboxView.setChecked(false);
-        }
+        else if (!mCheckBoxState) { checkboxView.setVisibility(View.GONE); }
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        ListViewItem listViewItem = listViewItemList.get(position);
+        final ListViewItem listViewItem = listViewItemList.get(position);
+
+        checkboxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                listViewItem.setChecked(isChecked);
+            }
+        });
+        checkboxView.setChecked(listViewItem.isChecked());
 
         // 아이템 내 각 위젯에 데이터 반영
         titleView.setText(listViewItem.getTitle());
@@ -90,20 +98,27 @@ public class ListViewAdapter extends BaseAdapter {
         listViewItemList.add(item);
     }
 
-    public void chageState(String state,int position){
-        listViewItemList.get(position).setState(state);
+    //삭제
+    public void removeItem() {
+        for(Iterator<ListViewItem> iter = listViewItemList.iterator(); iter.hasNext(); ) {
+            ListViewItem o = iter.next();
+            if (o.isChecked()) {
+                iter.remove();
+            }
+        }
         notifyDataSetChanged();
     }
 
-    public void removeItem(ListView lv) {
-        SparseBooleanArray checkedItems = lv.getCheckedItemPositions();
-        int count = getCount();
-        for(int i=count-1; i>=0; i--) {
-            if(checkedItems.get(i)) {
-                listViewItemList.remove(i);
-            }
+    //체크 전부 해제
+    public void uncheckAll() {
+        for(ListViewItem o : listViewItemList) {
+            o.setChecked(false);
         }
-        lv.clearChoices();
+        notifyDataSetChanged();
+    }
+
+    public void chageState(String state,int position){
+        listViewItemList.get(position).setState(state);
         notifyDataSetChanged();
     }
 

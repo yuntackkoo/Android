@@ -1,13 +1,7 @@
 package ssd.app;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import protocol.Comunication;
 
@@ -32,6 +22,8 @@ public class Devlist extends AppCompatActivity {
     private SsdDB db;
     private ArrayList<String> dlist;
     Comunication com = null;
+    ListViewClick listViewClick = new ListViewClick();
+    ListViewLongClick listViewLongClick = new ListViewLongClick();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +44,13 @@ public class Devlist extends AppCompatActivity {
         //리스트뷰에 저장될 텍스트
         lv_Devlist.setAdapter(lv_Adapter);
 
-        lv_Devlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent_settings = new Intent(getApplicationContext(), Settings.class);
-                startActivity(intent_settings);
-                return true;
-            }
-        });
+        lv_Devlist.setOnItemClickListener(listViewClick);
+        lv_Devlist.setOnItemLongClickListener(listViewLongClick);
+    }
 
-        lv_Devlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                String name = lv_Adapter.getItemName(position);
-                Intent intent = new Intent("CONNECT").putExtra("name",name);
-                sendBroadcast(intent);
-            }
-        });
+    public void onClick_add_device(View v) {
+        Intent intent_adddevice = new Intent(this, AddDevice.class);
+        startActivity(intent_adddevice);
     }
 
     public void chageSta(String state, int position){
@@ -95,14 +77,17 @@ public class Devlist extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                lv_Adapter.removeItem(lv_Devlist);
+                lv_Adapter.removeItem();
             case R.id.menu_setmenu:
                 if (lv_Adapter.mCheckBoxState == false) {
-
+                    lv_Devlist.setOnItemClickListener(null);
+                    lv_Devlist.setOnItemLongClickListener(null);
                     lv_Adapter.setCheckBoxState(true);
+                    lv_Adapter.uncheckAll();
                     delete_btn.setVisible(true);
                 } else {
-
+                    lv_Devlist.setOnItemClickListener(listViewClick);
+                    lv_Devlist.setOnItemLongClickListener(listViewLongClick);
                     lv_Adapter.setCheckBoxState(false);
                     delete_btn.setVisible(false);
                 }
@@ -110,9 +95,21 @@ public class Devlist extends AppCompatActivity {
         return true;
     }
 
-    public void onClick_add_device(View v) {
-        Intent intent_adddevice = new Intent(this, AddDevice.class);
-        startActivity(intent_adddevice);
+    private class ListViewClick implements AdapterView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> parentView, View clickedView, int position, long id) {
+            String name = lv_Adapter.getItemName(position);
+            Intent intent = new Intent("CONNECT").putExtra("name",name);
+            sendBroadcast(intent);
+        }
+    }
+
+    private class ListViewLongClick implements AdapterView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent_settings = new Intent(getApplicationContext(), Settings.class);
+            startActivity(intent_settings);
+            return true;
+        }
     }
 
     @Override
@@ -133,6 +130,9 @@ public class Devlist extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        lv_Adapter.setCheckBoxState(false);
+        delete_btn.setVisible(false);
+
         super.onDestroy();
     }
 }
