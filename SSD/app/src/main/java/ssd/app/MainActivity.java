@@ -108,11 +108,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent_history);
     }
 
-    public void onClick_settings(View view) {
-        Intent intent_settings = new Intent(this, Settings.class);
-        startActivity(intent_settings);
-    }
-
     public void onClick_logdel(View view) {
         SsdDB db = new SsdDB(this,SsdDB.DBNAME,null,1);
         db.logDel();
