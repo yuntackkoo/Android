@@ -6,6 +6,7 @@ public abstract class ComPacket {
 	private PacketProcess process = null;
 	private SsdCryptoModule cryptoModule = new SsdCryptoModule();
 	private Packet current = null;
+	private Comunication com = null;
 
 	abstract public void send(Packet send);
 	abstract public void receive();
@@ -27,4 +28,11 @@ public abstract class ComPacket {
 
 	abstract public boolean isConnect();
 
+	public Comunication getCom() {
+		return com;
+	}
+
+	public void setCom(Comunication com) {
+		this.com = com;
+	}
 }

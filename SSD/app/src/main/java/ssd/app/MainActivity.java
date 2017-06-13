@@ -152,9 +152,10 @@ public class MainActivity extends AppCompatActivity {
             config.setLock(sw_pw.isChecked());
             ConfigDataManager.getInstance(this).saveData(config);
         }
-
-        Intent intent = new Intent("SSD.STOP");
-        sendBroadcast(intent);
+        if(!config.isAuto_update()) {
+            Intent service = new Intent(this, Connection.class);
+            stopService(service);
+        }
 
         super.onDestroy();
     }

@@ -29,6 +29,8 @@ import protocol.Comunication;
 import protocol.Loging;
 import protocol.OperationCode;
 import protocol.Packet;
+import protocol.PacketProcess;
+import protocol.OperationCode;
 
 public class Connection extends Service {
     private SsdDB db = null;
@@ -61,24 +63,12 @@ public class Connection extends Service {
         filter.addAction("SSD.STOP");
         reciver = new Reciver();
         registerReceiver(reciver,filter);
-//        ArrayList<String> list = db.getDeviceList();
-//        for(int i=0;i<deviceList.size();i++){
-//            String addr = db.deviceSerch(list.get(0)).get("addr");
-//            String port = db.deviceSerch(list.get(0)).get("port");
-//            Byte id = Byte.parseByte(db.deviceSerch(list.get(0)).get("id"));
-//            deviceList.put(id,new Comunication(addr,port,id));
-//            deviceList.get(id).setLoging(new Loging() {
-//                @Override
-//                public void loging() {
-//
-//                }
-//            });
-//        }
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(reciver);
         super.onDestroy();
     }
 
@@ -89,43 +79,97 @@ public class Connection extends Service {
             if(intent.getAction().equals("CONNECT")) {
                 final String name = intent.getExtras().getString("name");
                 Map<String, String> tmp = db.deviceSerch(name);
-                currentcom = new Comunication(tmp.get("addr").toString(), "255", Byte.parseByte(tmp.get("id").toString()));
-                deviceList.put(name,currentcom);
-                currentcom.start();
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Packet p = new Packet();
-                        p.setCode(OperationCode.UnLock);
-                        currentcom.send(p);
-                    }
-                },1000);
-                currentcom.setLoging(new Loging() {
-                    byte[] tmp = new byte[5];
-                    @Override
-                    public void loging() {
-                        if(deviceList.get(name).getComPacket().getCurrent().getCode() == 64) {
-                            Notification noti = new Notification.Builder(getApplicationContext())
-                                    .setSmallIcon(R.drawable.bt_unlock)
-                                    .setContentTitle(new Byte(deviceList.get(name).getThisId()).toString())
-                                    .setContentText("잠금해제")
-                                    .setTicker("알림")
-                                    .build();
-                            notimgr.notify(deviceList.get(name).getThisId(), noti);
-                            Packet p = deviceList.get(name).getRecive();
-                            System.arraycopy(p.getData(),0,tmp,0,5);
-                            LogData log = new LogData(tmp);
-                            Log.e(new Integer(log.getDate()).toString(),"asdf");
-                            db.insertLog(log,(byte)0);
+                if(!deviceList.containsKey(name)) {
+                    currentcom = new Comunication(tmp.get("addr").toString(), "255", Byte.parseByte(tmp.get("id").toString()));
+                    currentcom.setP(new PacketProcess() {
+                        @Override
+                        public void doProcess(Comunication currentcom) {
+                            byte[] tmp = new byte[5];
+                            //boolean invail = false;
+                            boolean invail = true;
+                            currentcom.setRecive(currentcom.getComPacket().getCurrent());
+                            if (currentcom.getSeq_num() != 0) {
+                                //invail = recive.comp(seq_num);
+                            }
+                            if (invail && currentcom.getRecive() != null) {
+                                switch (currentcom.getRecive().getCode()) {
+                                    //응답
+                                    case OperationCode.Reponse:
+                                        currentcom.setSeq_num(currentcom.getRecive().getNonce());
+                                        System.out.println(currentcom.getSeq_num() + " 시퀸스 넘버");
+                                        break;
+                                    //초기 등록 또는 추가 등록시 키교환 확인
+                                    case OperationCode.Confirm_KeyEx:
+                                        break;
+                                    //키 교환 요구 받을시 키 제공
+                                    case OperationCode.KeyOffer:
+                                        currentcom.getComPacket().getCryptoModule().setKey(currentcom.getRecive().getData());
+                                        break;
+                                    //로그 요청 받을시 로그 응답
+                                    case OperationCode.Offer_Data:
+                                        break;
+                                    //다른 기기가 문을 열때
+                                    case OperationCode.Unlock_Other:
+                                        if (deviceList.get(name).getComPacket().getCurrent().getCode() == 64) {
+                                            Notification noti = new Notification.Builder(getApplicationContext())
+                                                    .setSmallIcon(R.drawable.bt_unlock)
+                                                    .setContentTitle(new Byte(deviceList.get(name).getThisId()).toString())
+                                                    .setContentText("잠금해제")
+                                                    .setTicker("알림")
+                                                    .build();
+                                            notimgr.notify(deviceList.get(name).getThisId(), noti);
+                                            Packet p = deviceList.get(name).getRecive();
+                                            System.arraycopy(p.getData(), 0, tmp, 0, 5);
+                                            LogData log = new LogData(tmp);
+                                            Log.e(new Integer(log.getDate()).toString(), "asdf");
+                                            db.insertLog(log, (byte) 0);
+                                        }
+                                        break;
+                                }
+                            }
+                            currentcom.setSeq_num(currentcom.getSeq_num()+1);
+                            currentcom.setRecive(null);
                         }
-                    }
-                });
-            }if(intent.getAction().equals("SSD.STOP")){
-                ConfigData config = ConfigDataManager.getInstance(getBaseContext()).getData();
-                if(!config.isAuto_update()){
-                    unregisterReceiver(reciver);
-                    stopSelf();
+                    });
+                    deviceList.put(name, currentcom);
+                    currentcom.start();
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Packet p = new Packet();
+                            p.setCode(OperationCode.Key_Ex);
+                            p.setId(0);
+                            p.setData("asdf".getBytes());
+                            currentcom.send(p);
+                            for (int i = 0; i < p.getData().length; i++) {
+                                System.out.print((char) p.getData()[i]);
+                                System.out.println();
+                            }
+                        }
+                    }, 1000);
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Packet p = new Packet();
+                            p.setCode(OperationCode.UnLock);
+                            p.setId(0);
+                            p.setData(new LogData((byte) 0).getByte());
+                            currentcom.send(p);
+                        }
+                    }, 2000);
+                } else{
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Packet p = new Packet();
+                            p.setCode(OperationCode.UnLock);
+                            p.setId(0);
+                            p.setData(new LogData((byte) 0).getByte());
+                            currentcom.send(p);
+                        }
+                    }, 1000);
                 }
             }
         }

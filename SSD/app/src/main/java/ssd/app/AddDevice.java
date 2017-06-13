@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
+import java.util.Map;
+
 import static ssd.app.Devlist.lv_Adapter;
 
 public class AddDevice extends Activity {
@@ -44,6 +46,9 @@ public class AddDevice extends Activity {
         finish();
 
         add_Listview(input_ip,input_username,input_devname);
+
+        Map map = db.deviceSerch(input_devname);
+        //db.initDevice(Byte.parseByte((String) map.get("id")));
     }
 
     public void add_Listview (String a, String b, String c) {

@@ -1,5 +1,5 @@
 package protocol;
 
 public interface PacketProcess {
-	abstract public void doProcess();
+	abstract public void doProcess(Comunication comunication);
 }

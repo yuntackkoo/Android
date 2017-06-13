@@ -97,7 +97,7 @@ public class TcpComPacket extends ComPacket{
 			}
 		}
 		if(isConnect()) {
-			this.process.doProcess();
+			this.process.doProcess(super.getCom());
 		}
 		super.setCurrent(null);
 	}
@@ -110,5 +110,19 @@ public class TcpComPacket extends ComPacket{
 	@Override
 	public boolean isConnect() {
 		return tcp_send.isConnected();
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		if(tcp_send != null){
+			tcp_send.close();
+		}
+		if(in != null){
+			in.close();
+		}
+		if(out != null){
+			out.close();
+		}
+		super.finalize();
 	}
 }

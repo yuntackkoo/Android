@@ -120,4 +120,17 @@ public class SsdDB extends SQLiteOpenHelper {
         db.close();
         return map;
     }
+
+    public void initDevice(byte deviceid){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("CREATE TABLE DEVICE" + Byte.toString(deviceid) + " (USERID INTEGER,USERNAME TEXT);");
+        db.close();
+    }
+
+    public void deleteDevice(byte deviceid){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE DEVICE" + Byte.toString(deviceid)+ ");");
+        db.close();
+    }
+
 }

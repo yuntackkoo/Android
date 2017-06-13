@@ -20,8 +20,10 @@ public class Comunication extends Thread {
     private boolean flag = true;
     private Loging loging = null;
     private boolean connected = false;
+    private Comunication me = null;
+    private PacketProcess p = null;
 
-    public Comunication(String dn, String port,byte id) {
+    public Comunication(String dn, String port, byte id) {
         this.dn = new String(dn);
         this.port = new String(port);
         this.id = id;
@@ -38,46 +40,8 @@ public class Comunication extends Thread {
             comPacket = new TcpComPacket(dn, port);
             connected = true;
         }
-        comPacket.setProcess
-                (new PacketProcess() {
-                    @Override
-                    public void doProcess() {
-                        //boolean invail = false;
-                        boolean invail = true;
-                        recive = comPacket.getCurrent();
-                        if (seq_num != 0) {
-                            //invail = recive.comp(seq_num);
-                        }
-                        if (invail && recive != null) {
-                            switch (recive.getCode()) {
-                                //응답
-                                case OperationCode.Reponse:
-                                    seq_num = recive.getNonce();
-                                    System.out.println(seq_num + " 시퀸스 넘버");
-                                    break;
-                                //초기 등록 또는 추가 등록시 키교환 확인
-                                case OperationCode.Confirm_KeyEx:
-                                    break;
-                                //키 교환 요구 받을시 키 제공
-                                case OperationCode.KeyOffer:
-                                    comPacket.getCryptoModule().setKey(recive.getData());
-                                    break;
-                                //로그 요청 받을시 로그 응답
-                                case OperationCode.Offer_Data:
-                                    loging.loging();
-                                    break;
-                                //다른 기기가 문을 열때
-                                case OperationCode.Unlock_Other:
-                                    loging.loging();
-                                    break;
-                            }
-                        }
-                        seq_num++;
-                        recive = null;
-                    }
-
-                }
-        );
+        comPacket.setCom(this);
+        comPacket.setProcess(this.p);
         send = new Packet();
         send.setCode(OperationCode.Join);
         send.setId(id);
@@ -132,4 +96,55 @@ public class Comunication extends Thread {
         return connected;
     }
 
+    public void setComPacket(ComPacket comPacket) {
+        this.comPacket = comPacket;
+    }
+
+    public void setDn(String dn) {
+        this.dn = dn;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public void setSeq_num(int seq_num) {
+        this.seq_num = seq_num;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSend(Packet send) {
+        this.send = send;
+    }
+
+    public void setRecive(Packet recive) {
+        this.recive = recive;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public Loging getLoging() {
+        return loging;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public Comunication getMe() {
+        return me;
+    }
+
+    public void setMe(Comunication me) {
+        this.me = me;
+    }
+
+    public void setP(PacketProcess p) {
+        this.p = p;
+    }
 }
