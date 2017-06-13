@@ -28,8 +28,7 @@ public class SsdDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
-        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
-                "DEVICE_PORT INTEGER);");
+        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT);");
     }
 
     @Override
@@ -52,10 +51,10 @@ public class SsdDB extends SQLiteOpenHelper {
     }
 
     //디바이스를 추가 이름,주소,포트
-    public void addDevice(String name,String addr,String port){
+    public void addDevice(String name,String addr){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO DEVICE (DEVICE_NAME,DEVICE_ADDR,DEVICE_PORT) " +
-        "VALUES ('" + name + "','" + addr + "','" + port + "');");
+        db.execSQL("INSERT INTO DEVICE (DEVICE_NAME,DEVICE_ADDR) " +
+        "VALUES ('" + name + "','" + addr + "');");
         db.close();
     }
 
@@ -80,8 +79,7 @@ public class SsdDB extends SQLiteOpenHelper {
     public void logDel(){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE DEVICE;");
-        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT," +
-                "DEVICE_PORT INTEGER);");
+        db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT);");
         db.execSQL("DROP TABLE LOG");
         db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
         db.close();
@@ -91,12 +89,11 @@ public class SsdDB extends SQLiteOpenHelper {
     public Map<String,String> deviceSerch(String name){
         Map<String,String> tmp = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT DEVICE_ID,DEVICE_ADDR,DEVICE_PORT FROM DEVICE WHERE DEVICE_NAME = '" + name + "';",null);
+        Cursor cursor = db.rawQuery("SELECT DEVICE_ID,DEVICE_ADDR FROM DEVICE WHERE DEVICE_NAME = '" + name + "';",null);
         cursor.moveToFirst();
         Byte b = new Byte((byte)cursor.getInt(0));
         tmp.put("id",b.toString());
         tmp.put("addr",cursor.getString(1));
-        tmp.put("port",cursor.getString(2));
         db.close();
         return tmp;
     }

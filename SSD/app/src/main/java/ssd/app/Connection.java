@@ -27,6 +27,7 @@ import kr.re.nsr.crypto.util.Pack;
 import log.LogData;
 import protocol.Comunication;
 import protocol.Loging;
+import protocol.OperationCode;
 import protocol.Packet;
 
 public class Connection extends Service {
@@ -88,9 +89,18 @@ public class Connection extends Service {
             if(intent.getAction().equals("CONNECT")) {
                 final String name = intent.getExtras().getString("name");
                 Map<String, String> tmp = db.deviceSerch(name);
-                currentcom = new Comunication(tmp.get("addr").toString(), tmp.get("port").toString(), Byte.parseByte(tmp.get("id").toString()));
+                currentcom = new Comunication(tmp.get("addr").toString(), "255", Byte.parseByte(tmp.get("id").toString()));
                 deviceList.put(name,currentcom);
                 currentcom.start();
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Packet p = new Packet();
+                        p.setCode(OperationCode.UnLock);
+                        currentcom.send(p);
+                    }
+                },1000);
                 currentcom.setLoging(new Loging() {
                     byte[] tmp = new byte[5];
                     @Override

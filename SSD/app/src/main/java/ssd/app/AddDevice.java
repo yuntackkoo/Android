@@ -30,7 +30,6 @@ public class AddDevice extends Activity {
         edit_ipadd = (EditText) findViewById(R.id.input_ipadd);
         edit_username = (EditText) findViewById(R.id.input_username);
         edit_devname = (EditText) findViewById(R.id.input_devname);
-        edit_port = (EditText) findViewById(R.id.input_portadd);
     }
 
     public void onClick_addcancle (View v) { finish(); }
@@ -39,9 +38,8 @@ public class AddDevice extends Activity {
         input_ip = edit_ipadd.getText().toString();
         input_username = edit_username.getText().toString();
         input_devname = edit_devname.getText().toString();
-        input_port = edit_port.getText().toString();
 
-        db.addDevice(input_devname,input_ip,input_port);
+        db.addDevice(input_devname,input_ip);
 
         finish();
 

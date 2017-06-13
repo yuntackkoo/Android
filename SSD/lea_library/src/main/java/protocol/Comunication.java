@@ -1,5 +1,6 @@
 package protocol;
 
+import java.awt.SystemTray;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -53,9 +54,6 @@ public class Comunication extends Thread {
                                 case OperationCode.Reponse:
                                     seq_num = recive.getNonce();
                                     System.out.println(seq_num + " 시퀸스 넘버");
-                                    Packet p = new Packet();
-                                    p.setCode(OperationCode.UnLock);
-                                    comPacket.send(p);
                                     break;
                                 //초기 등록 또는 추가 등록시 키교환 확인
                                 case OperationCode.Confirm_KeyEx:
@@ -91,6 +89,7 @@ public class Comunication extends Thread {
 
     public void send(Packet send) {
         if(comPacket != null){
+            System.out.println(send.getCode());
             this.seq_num++;
             send.setNonce(this.seq_num);
             comPacket.send(send);
