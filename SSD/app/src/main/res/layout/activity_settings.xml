@@ -65,6 +65,7 @@
                 android:id="@+id/input_devname"
                 android:singleLine="true"
                 android:lines="1" />
+
         </LinearLayout>
     </ScrollView>
 

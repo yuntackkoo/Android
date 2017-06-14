@@ -2,72 +2,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:background="#FFFFFF"
     android:layout_width="280dp" android:layout_height="400dp"
-    android:layout_gravity="center" android:gravity="center_horizontal"
-    android:paddingTop="10dp">
+    android:layout_gravity="center" android:gravity="center_horizontal">
 
-    <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="IP Address" android:textSize="20sp"
-        android:textColor="#4db6ac" android:textStyle="bold" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="330dp">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="330dp"
+            android:orientation="vertical" android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_margin="10dp" android:paddingTop="10dp"
+                android:text="IP Address" android:textSize="20sp"
+                android:textColor="#4db6ac" android:textStyle="bold" />
+            <EditText
+                android:layout_width="220dp" android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:text="192.168.1.0" android:textSize="20sp"
+                android:textColor="#21c0ff"
+                android:id="@+id/input_ipadd"
+                android:singleLine="true"
+                android:lines="1" />
 
-    <EditText
-        android:layout_width="220dp" android:layout_height="40dp"
-        android:text="192.168.1.0" android:textSize="20sp"
-        android:textColor="#21c0ff"
-        android:id="@+id/input_ipadd"
-        android:singleLine="true"
-        android:lines="1" />
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_margin="10dp" android:paddingTop="10dp"
+                android:text="User Name" android:textSize="20sp"
+                android:textColor="#4db6ac" android:textStyle="bold" />
+            <EditText
+                android:layout_width="220dp" android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:text="은재" android:textSize="20sp"
+                android:textColor="#21c0ff"
+                android:id="@+id/input_username"
+                android:singleLine="true"
+                android:lines="1" />
 
-    <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="User Name" android:textSize="20sp"
-        android:textColor="#4db6ac" android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_margin="10dp" android:paddingTop="10dp"
+                android:text="Device Name" android:textSize="20sp"
+                android:textColor="#4db6ac" android:textStyle="bold" />
+            <EditText
+                android:layout_width="220dp" android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:text="현관문" android:textSize="20sp"
+                android:textColor="#21c0ff"
+                android:id="@+id/input_devname"
+                android:singleLine="true"
+                android:lines="1" />
 
-    <EditText
-        android:layout_width="220dp" android:layout_height="40dp"
-        android:text="은재" android:textSize="20sp"
-        android:textColor="#21c0ff"
-        android:id="@+id/input_username"
-        android:singleLine="true"
-        android:lines="1" />
-
-    <TextView
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Device Name" android:textSize="20sp"
-        android:textColor="#4db6ac" android:textStyle="bold" />
-
-    <EditText
-        android:layout_width="220dp" android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:text="현관문" android:textSize="20sp"
-        android:textColor="#21c0ff"
-        android:id="@+id/input_devname"
-        android:singleLine="true"
-        android:lines="1" />
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="60dp"
-        android:orientation="horizontal" android:layout_marginTop="25dp" >
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_marginLeft="20dp" style="?android:attr/borderlessButtonStyle"
-        android:layout_width="100dp" android:layout_height="50dp"
-        android:background="@drawable/buttonshape"
+        <Button
+            android:layout_marginLeft="20dp" style="?android:attr/borderlessButtonStyle"
+            android:layout_width="100dp" android:layout_height="50dp"
+            android:background="@drawable/buttonshape"
+            android:text="취소" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
 
-        android:text="취소" android:textSize="20sp"
-        android:textColor="#21c0ff" android:textStyle="bold"
+            android:onClick="onClick_addcancle" />
 
-        android:onClick="onClick_addcancle" />
+        <Button
+            android:layout_marginLeft="40dp" style="?android:attr/borderlessButtonStyle"
+            android:layout_width="100dp" android:layout_height="50dp"
+            android:background="@drawable/buttonshape"
+            android:text="추가" android:textSize="20sp"
+            android:textColor="#21c0ff" android:textStyle="bold"
 
-    <Button
-        android:layout_marginLeft="40dp" style="?android:attr/borderlessButtonStyle"
-        android:layout_width="100dp" android:layout_height="50dp"
-        android:background="@drawable/buttonshape"
-
-        android:text="추가" android:textSize="20sp"
-        android:textColor="#21c0ff" android:textStyle="bold"
-
-        android:onClick="onClick_adddevice" />
+            android:onClick="onClick_adddevice" />
 
     </LinearLayout>
 
