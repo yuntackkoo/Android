@@ -12,7 +12,7 @@ public class BTService {
     private static BluetoothSocket mSocket=null;
 
     //블루투스 환경 체크
-    private static void checkBluetooth(MainActivity ctx) {
+    public static void checkBluetooth(MainActivity ctx) {
         /**
          * getDefaultAdapter() : 만일 폰에 블루투스 모듈이 없으면 null 리턴
          * 이경우 Toast를 사용해 에러메시지 표시 */

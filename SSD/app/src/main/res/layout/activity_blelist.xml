@@ -19,7 +19,7 @@
             android:layout_weight="1.3"
             android:text="SCAN"
             android:textColor="#21c0ff"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvContents"
@@ -31,18 +31,18 @@
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4" />
+            android:layout_weight="0.5" />
 
         <Button
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="80dp"
             android:layout_height="0dp"
             android:layout_gravity="end"
-            android:layout_weight="1.3"
+            android:layout_weight="1.2"
             android:text="취소"
             android:textColor="#21c0ff"
             android:textSize="20sp" />
-        
+
     </LinearLayout>
 
 </layout>

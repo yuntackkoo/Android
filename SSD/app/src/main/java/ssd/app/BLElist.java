@@ -1,13 +1,13 @@
 package ssd.app;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import ssd.app.databinding.ActivityBlelistBinding;
 
-public class BLElist extends AppCompatActivity {
+public class BLElist extends Activity {
 
     ActivityBlelistBinding binding_BLElist;
 
