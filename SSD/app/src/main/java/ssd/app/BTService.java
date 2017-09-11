@@ -1,5 +1,6 @@
 package ssd.app;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -9,10 +10,10 @@ public class BTService {
 
     private static BluetoothAdapter mBTadapter;
     private static BluetoothDevice mRemoteDev; //연결할 장치
-    private static BluetoothSocket mSocket=null;
+    private static BluetoothSocket mSocket = null;
 
     //블루투스 환경 체크
-    public static void checkBluetooth(MainActivity ctx) {
+    public static void checkBluetooth(Activity ctx) {
         /**
          * getDefaultAdapter() : 만일 폰에 블루투스 모듈이 없으면 null 리턴
          * 이경우 Toast를 사용해 에러메시지 표시 */
@@ -25,16 +26,20 @@ public class BTService {
             //Intent intent_enablebt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             //startActivityForResult(intent_enablebt, REQUEST_ENABLE_BT);
         } else {
-            ctx.btTask.cancel(true);
-            BTService.scanLeDevice(true);
+            BTService.scanLeDevice(true, ctx);
         }
     }
 
-    private static void scanLeDevice(final boolean enable) {
+    private static void scanLeDevice(final boolean enable, Activity ctx) {
+        if (enable) {
+            Toast.makeText(ctx, "scanLeDevice", Toast.LENGTH_SHORT).show();
+        } else if (!enable) {
 
         }
 
     }
+
+}
 
 
     /*

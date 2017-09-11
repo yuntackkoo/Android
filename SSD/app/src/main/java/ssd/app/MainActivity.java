@@ -2,12 +2,10 @@ package ssd.app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,17 +14,17 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import config.ConfigData;
 
 public class MainActivity extends AppCompatActivity {
 
-    public AsyncTask btTask;
     DrawerLayout mDrawer;
     Switch sw_pw;
     Switch sw_auto;
     ConfigData config;
-
+    private long backKeyPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,40 +112,21 @@ public class MainActivity extends AppCompatActivity {
         db.logDel();
     }
 
-    private class BtTask extends AsyncTask {
-
-         protected void onPreExecute() {
-             Log.d("SSD","Async Test 0");
-             super.onPreExecute();
-         }
-         @Override
-         protected Object doInBackground(Object[] params) {
-             try {
-                 Thread.sleep(1000);
-                 // doInBackground 안에서 UI 처리를 하게되면 Fatal Error
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
-             return true;
-         }
-         @Override
-         protected void onPostExecute(Object o) {
-             super.onPostExecute(o);
-             BTService.checkBluetooth(MainActivity.this);
-         }
-     }
+    public void onBackPressed() {
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(MainActivity.this,
+                    "'뒤로' 버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    } // 백키 2번 로그아웃
 
     @Override
     protected void onDestroy() {
-        try {
-            if (btTask.getStatus() == AsyncTask.Status.RUNNING) {
-                btTask.cancel(true);
-            }
-            else { }
-
-        }
-        catch (Exception e) { }
-
         if(config != null){
             config.setAuto_update(sw_auto.isChecked());
             config.setLock(sw_pw.isChecked());
