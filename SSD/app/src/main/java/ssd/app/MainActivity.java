@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick_btunlock(View view) {
         btTask = new BtTask();
-        BTService.checkBluetooth(this);
         btTask.execute();
         //startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS)); 블루투스 설정 화면으로 이동
     }
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
          @Override
          protected void onPostExecute(Object o) {
              super.onPostExecute(o);
-             BTService.searchBTlist(MainActivity.this);
+             BTService.checkBluetooth(MainActivity.this);
          }
      }
 

@@ -3,24 +3,16 @@ package ssd.app;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 public class BTService {
 
-    static BluetoothAdapter mBTadapter;
-    static BluetoothDevice mRemoteDev; //연결할 장치
-    static BluetoothSocket mSocket=null;
+    private static BluetoothAdapter mBTadapter;
+    private static BluetoothDevice mRemoteDev; //연결할 장치
+    private static BluetoothSocket mSocket=null;
 
     //블루투스 환경 체크
-    static void checkBluetooth(MainActivity ctx) {
+    private static void checkBluetooth(MainActivity ctx) {
         /**
          * getDefaultAdapter() : 만일 폰에 블루투스 모듈이 없으면 null 리턴
          * 이경우 Toast를 사용해 에러메시지 표시 */
@@ -34,15 +26,22 @@ public class BTService {
             //startActivityForResult(intent_enablebt, REQUEST_ENABLE_BT);
         } else {
             ctx.btTask.cancel(true);
-            searchBTlist(ctx);
+            BTService.scanLeDevice(true);
         }
     }
 
+    private static void scanLeDevice(final boolean enable) {
+
+        }
+
+    }
+
+
+    /*
     //페어링 목록 받아오기
     static void searchBTlist(final MainActivity ctx) {
-        /** BluetoothDevice : 블루투스 장비에 대한 정보(이름, 주소 등) 제공하는 클래스
-         *  getBondedDevices() : 페어링된 장치 목록 얻어오는 메소드
-         */
+        // BluetoothDevice : 블루투스 장비에 대한 정보(이름, 주소 등) 제공하는 클래스
+        // getBondedDevices() : 페어링된 장치 목록 얻어오는 메소드
         final Set<BluetoothDevice> pairedDevices = mBTadapter.getBondedDevices();
 
         if (pairedDevices.size() > 0) {
@@ -68,7 +67,7 @@ public class BTService {
                     if (item == pairedDevices.size()) { // 장치를 선택하지 않고 취소를 누른 경우
                         Toast.makeText(ctx, "연결할 장치를 선택하지 않았습니다.", Toast.LENGTH_SHORT).show();
                     } else { // 연결할 장치를 선택한 경우, 선택한 장치와 연결을 시도함.
-                    */
+
                         connectToSelectedDev(ctx, items[item].toString()); // 페어링 장치와 연결
                     }
                 });
@@ -120,4 +119,4 @@ public class BTService {
         }
         return selectedDev;
     }
-}
+    */

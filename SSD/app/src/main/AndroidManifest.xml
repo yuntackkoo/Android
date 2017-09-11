@@ -56,12 +56,17 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="기기 추가"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".BLElist"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="BLE 리스트"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
 
         <service
             android:name=".Connection"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
+
     </application>
 
 </manifest>
