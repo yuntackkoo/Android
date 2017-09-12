@@ -100,7 +100,6 @@ public class BLeListActivity extends Activity {
         mLeDeviceListAdapter = new BLeAdapter(BLeListActivity.this);
         binding_BLElist.gattServicesList.setAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
-        Toast.makeText(BLeListActivity.this, "스캔 시작", Toast.LENGTH_SHORT).show();
     }
 
     @Override
