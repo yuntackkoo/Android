@@ -35,7 +35,7 @@ public class BLeListActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding_BLElist = DataBindingUtil.setContentView(this, R.layout.activity_blelist);
-        BLeListActivity.this.setFinishOnTouchOutside(false); // 다이얼로그 액티비티 외부 터치시 finish false
+        BLeListActivity.this.setFinishOnTouchOutside(false);
 
         mHandler = new Handler();
 
@@ -73,10 +73,8 @@ public class BLeListActivity extends Activity {
                 if (device == null) return;
                 final Intent intent_Itemclicked =
                         new Intent(BLeListActivity.this, BLeControlActivity.class);
-                intent_Itemclicked.putExtra
-                        ("DEVICE_NAME", device.getName());
-                intent_Itemclicked.putExtra
-                        ("DEVICE_ADDRESS", device.getAddress());
+                intent_Itemclicked.putExtra("DEVICE_NAME", device.getName());
+                intent_Itemclicked.putExtra("DEVICE_ADDRESS", device.getAddress());
                 if (mScanning) {
                     mBTAdapter.stopLeScan(mLeScanCallback);
                     mScanning = false;
@@ -102,6 +100,7 @@ public class BLeListActivity extends Activity {
         mLeDeviceListAdapter = new BLeAdapter(BLeListActivity.this);
         binding_BLElist.gattServicesList.setAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
+        Toast.makeText(BLeListActivity.this, "스캔 시작", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -117,10 +116,16 @@ public class BLeListActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        scanLeDevice(false);
         mLeDeviceListAdapter.clear();
+        scanLeDevice(false);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLeDeviceListAdapter.clear();
+        scanLeDevice(false);
+    }
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -129,8 +134,8 @@ public class BLeListActivity extends Activity {
                 @Override
                 public void run() {
                     mScanning = false;
+                    Toast.makeText(BLeListActivity.this, "스캔 완료", Toast.LENGTH_SHORT).show();
                     mBTAdapter.stopLeScan(mLeScanCallback);
-                    invalidateOptionsMenu();
                 }
             }, SCAN_PERIOD);
 
@@ -140,7 +145,6 @@ public class BLeListActivity extends Activity {
             mScanning = false;
             mBTAdapter.stopLeScan(mLeScanCallback);
         }
-        invalidateOptionsMenu();
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
@@ -158,8 +162,26 @@ public class BLeListActivity extends Activity {
                 }
             };
 
+    public void onClick_btnscanning(View v) {
+        if (!mScanning) {
+            mLeDeviceListAdapter.clear();
+            scanLeDevice(true);
+        } else if (mScanning) {
+//            mLeDeviceListAdapter.clear();
+//            scanLeDevice(false);
+            Toast.makeText(this, "스캔 중이니까 기다리세욧!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void onClick_btnblecancle(View v) {
         this.finish();
+        mLeDeviceListAdapter.clear();
+        scanLeDevice(false);
     }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+    } // 백키 비활성화
 
 }

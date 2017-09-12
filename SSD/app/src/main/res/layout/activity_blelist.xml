@@ -12,16 +12,18 @@
         android:weightSum="10">
 
         <Button
+            android:id="@+id/btn_scanning"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="80dp"
             android:layout_height="0dp"
             android:layout_gravity="end"
             android:layout_weight="1"
+            android:onClick="onClick_btnscanning"
             android:text="SCAN"
             android:textColor="#21c0ff"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <ListView
             android:id="@+id/gatt_services_list"
