@@ -4,16 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class History extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
     Spinner device = null;
     Spinner user = null;
     TextView date = null;

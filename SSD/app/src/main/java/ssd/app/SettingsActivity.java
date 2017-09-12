@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
-import static ssd.app.Devlist.lv_Adapter;
+import static ssd.app.DevlistActivity.lv_Adapter;
 
-public class Settings extends Activity {
+public class SettingsActivity extends Activity {
 
     static String input_ip;
     static String input_username;

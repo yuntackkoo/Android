@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import protocol.Comunication;
 
-public class Devlist extends AppCompatActivity {
+public class DevlistActivity extends AppCompatActivity {
 
     static ListView lv_Devlist;
     static ListViewAdapter lv_Adapter;
@@ -49,7 +49,7 @@ public class Devlist extends AppCompatActivity {
     }
 
     public void onClick_add_device(View v) {
-        Intent intent_adddevice = new Intent(this, AddDevice.class);
+        Intent intent_adddevice = new Intent(this, AddDeviceActivity.class);
         startActivity(intent_adddevice);
     }
 
@@ -106,7 +106,7 @@ public class Devlist extends AppCompatActivity {
     private class ListViewLongClick implements AdapterView.OnItemLongClickListener {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent_settings = new Intent(getApplicationContext(), Settings.class);
+            Intent intent_settings = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent_settings);
             return true;
         }

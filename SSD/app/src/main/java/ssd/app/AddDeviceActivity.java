@@ -8,9 +8,9 @@ import android.widget.EditText;
 
 import java.util.Map;
 
-import static ssd.app.Devlist.lv_Adapter;
+import static ssd.app.DevlistActivity.lv_Adapter;
 
-public class AddDevice extends Activity {
+public class AddDeviceActivity extends Activity {
 
     static String input_ip;
     static String input_port;

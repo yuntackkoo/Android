@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         startService(service);
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -90,20 +92,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick_btunlock(View view) {
-        Intent intent_BLElist = new Intent(this, BLElist.class);
+        Intent intent_BLElist = new Intent(this, BLeListActivity.class);
         startActivity(intent_BLElist);
 //        btTask = new BtTask();
 //        btTask.execute();
-        //startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS)); 블루투스 설정 화면으로 이동
+        //startActivity(new Intent(SettingsActivity.ACTION_BLUETOOTH_SETTINGS)); 블루투스 설정 화면으로 이동
     }
 
     public void onClick_devlist(View view) {
-        Intent intent_devlist = new Intent(this, Devlist.class);
+        Intent intent_devlist = new Intent(this, DevlistActivity.class);
         startActivity(intent_devlist);
     }
 
     public void onClick_history(View view) {
-        Intent intent_history = new Intent(this, History.class);
+        Intent intent_history = new Intent(this, HistoryActivity.class);
         startActivity(intent_history);
     }
 
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
             backKeyPressedTime = System.currentTimeMillis();
             Toast.makeText(MainActivity.this,
-                    "'뒤로' 버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+                    "종료하시려면 한번 더 누르세요!", Toast.LENGTH_SHORT).show();
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {

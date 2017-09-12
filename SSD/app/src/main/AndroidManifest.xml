@@ -9,6 +9,9 @@
     <!-- 디바이스 검색 시작 및 블루투스 설정 조작 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -35,31 +38,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".History"
+            android:name=".HistoryActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="히스토리" />
         <activity
-            android:name=".Devlist"
+            android:name=".DevlistActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="기기 목록" />
         <activity
-            android:name=".Applock"
+            android:name=".ApplockActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="보안 설정" />
         <activity
-            android:name=".Settings"
+            android:name=".SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="기기 관리"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity
-            android:name=".AddDevice"
+            android:name=".AddDeviceActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="기기 추가"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity
-            android:name=".BLElist"
+            android:name=".BLeListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="BLE 리스트"
+            android:label="BLE 리쓰뜨"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
 
         <service
