@@ -20,6 +20,8 @@ import config.ConfigData;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     DrawerLayout mDrawer;
     Switch sw_pw;
     Switch sw_auto;
@@ -67,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         Intent service = new Intent(this,Connection.class);
         startService(service);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by admin on 2017-09-12.
+ * Created by EUNJAESHIN on 2017-09-12.
  */
 
 public class BLeAdapter extends BaseAdapter {

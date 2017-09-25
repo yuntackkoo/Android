@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -22,13 +23,15 @@ import ssd.app.databinding.ActivityBlelistBinding;
 
 public class BLeListActivity extends Activity {
 
+    private static final String TAG = "BLEListActivity";
+
     ActivityBlelistBinding binding_BLElist;
     private BLeAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBTAdapter;
     private boolean mScanning;
     private Handler mHandler;
     private static final int REQUEST_ENABLE_BT = 1;
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 8 * 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +69,15 @@ public class BLeListActivity extends Activity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, permissionCheck2);
 
-        binding_BLElist.gattServicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
                 if (device == null) return;
                 final Intent intent_Itemclicked =
                         new Intent(BLeListActivity.this, BLeControlActivity.class);
-                intent_Itemclicked.putExtra("DEVICE_NAME", device.getName());
-                intent_Itemclicked.putExtra("DEVICE_ADDRESS", device.getAddress());
+                intent_Itemclicked.putExtra(BLeControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+                intent_Itemclicked.putExtra(BLeControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
                 if (mScanning) {
                     mBTAdapter.stopLeScan(mLeScanCallback);
                     mScanning = false;
@@ -82,6 +85,7 @@ public class BLeListActivity extends Activity {
                 startActivity(intent_Itemclicked);
             }
         });
+
     }
 
     @Override
@@ -98,7 +102,7 @@ public class BLeListActivity extends Activity {
 
         // 뷰 어댑터 초기화
         mLeDeviceListAdapter = new BLeAdapter(BLeListActivity.this);
-        binding_BLElist.gattServicesList.setAdapter(mLeDeviceListAdapter);
+        binding_BLElist.BleScanlist.setAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
     }
 
@@ -126,6 +130,13 @@ public class BLeListActivity extends Activity {
         scanLeDevice(false);
     }
 
+    @Override
+        public void onLowMemory() {
+        super.onLowMemory();
+        mLeDeviceListAdapter.clear();
+        scanLeDevice(false);
+    }
+
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
@@ -146,16 +157,18 @@ public class BLeListActivity extends Activity {
         }
     }
 
+    // 디바이스 스캔 콜백
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
-
                 @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("RRSI", Integer.toString(rssi));
                             mLeDeviceListAdapter.addDevice(device);
                             mLeDeviceListAdapter.notifyDataSetChanged();
+
                         }
                     });
                 }

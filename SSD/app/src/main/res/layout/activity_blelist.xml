@@ -26,7 +26,7 @@
             android:visibility="visible" />
 
         <ListView
-            android:id="@+id/gatt_services_list"
+            android:id="@+id/Ble_Scanlist"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="5dp"

@@ -62,8 +62,12 @@
         <activity
             android:name=".BLeListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="BLE 리쓰뜨"
+            android:label="BLE 리스트"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".BLeControlActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="BLE 제어" />
 
         <service
             android:name=".Connection"
