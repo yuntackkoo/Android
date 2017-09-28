@@ -12,26 +12,30 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import ssd.app.bluetooth.BleAdapter;
 import ssd.app.databinding.ActivityBlelistBinding;
+
 
 public class BLeListActivity extends Activity {
 
-    private static final String TAG = "BLEListActivity";
-
     ActivityBlelistBinding binding_BLElist;
-    private BLeAdapter mLeDeviceListAdapter;
-    private BluetoothAdapter mBTAdapter;
+    private BleAdapter mLeDeviceListAdapter;
+    private BluetoothAdapter mBtAdapter;
     private boolean mScanning;
     private Handler mHandler;
+
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 8 * 1000;
+
+    private ArrayList<BluetoothDevice> arrDevices = new ArrayList<BluetoothDevice>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,67 +52,66 @@ public class BLeListActivity extends Activity {
             finish();
         }
 
+        // 위치 권한
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                1);
+
         // 블루투스 어댑터를 초기화한다
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBTAdapter = bluetoothManager.getAdapter();
+        mBtAdapter = bluetoothManager.getAdapter();
 
-        if (mBTAdapter == null) {
-            Toast.makeText(this, "블루투스가 지원되지 않는 기기입니다..", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        // 블루투스 어댑터 사용중이 아니면 실행
+        if (!mBtAdapter.isEnabled()) {
+            Intent intent_enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent_enableBT, REQUEST_ENABLE_BT);
         }
 
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, permissionCheck);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, permissionCheck2);
 
         binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mScanning) {
+                    mBtAdapter.stopLeScan(mLeScanCallback);
+                    mScanning = false;
+                }
                 final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
                 if (device == null) return;
+                final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
+                intent.putExtra(BLeControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+                intent.putExtra(BLeControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+                startActivity(intent);
+            }
+        });
+                /*
                 final Intent intent_Itemclicked =
                         new Intent(BLeListActivity.this, BLeControlActivity.class);
                 intent_Itemclicked.putExtra(BLeControlActivity.EXTRAS_DEVICE_NAME, device.getName());
                 intent_Itemclicked.putExtra(BLeControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-                if (mScanning) {
-                    mBTAdapter.stopLeScan(mLeScanCallback);
-                    mScanning = false;
-                }
                 startActivity(intent_Itemclicked);
-            }
-        });
-
+                */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // 블루투스 어댑터 사용중이 아니면 실행
-        if (!mBTAdapter.isEnabled()) {
-            if (!mBTAdapter.isEnabled()) {
-                Intent intent_enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(intent_enableBT, REQUEST_ENABLE_BT);
-            }
+        // 블루투스 초기화 확인
+        if (mBtAdapter == null) {
+            Toast.makeText(this, "블루투스 어댑터를 찾을 수 없음", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        } else {
+            // 뷰 어댑터 초기화
+            mLeDeviceListAdapter = new BleAdapter(BLeListActivity.this);
+            binding_BLElist.BleScanlist.setAdapter(mLeDeviceListAdapter);
+            scanLeDevice(true);
         }
-
-        // 뷰 어댑터 초기화
-        mLeDeviceListAdapter = new BLeAdapter(BLeListActivity.this);
-        binding_BLElist.BleScanlist.setAdapter(mLeDeviceListAdapter);
-        scanLeDevice(true);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             finish();
             return;
@@ -131,7 +134,7 @@ public class BLeListActivity extends Activity {
     }
 
     @Override
-        public void onLowMemory() {
+    public void onLowMemory() {
         super.onLowMemory();
         mLeDeviceListAdapter.clear();
         scanLeDevice(false);
@@ -145,16 +148,26 @@ public class BLeListActivity extends Activity {
                 public void run() {
                     mScanning = false;
                     Toast.makeText(BLeListActivity.this, "스캔 완료", Toast.LENGTH_SHORT).show();
-                    mBTAdapter.stopLeScan(mLeScanCallback);
+                    mBtAdapter.stopLeScan(mLeScanCallback);
+                    mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             }, SCAN_PERIOD);
 
             mScanning = true;
-            mBTAdapter.startLeScan(mLeScanCallback);
+            mBtAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
-            mBTAdapter.stopLeScan(mLeScanCallback);
+            mBtAdapter.stopLeScan(mLeScanCallback);
         }
+    }
+
+    private boolean checkDuplicated(BluetoothDevice device) {
+        for (BluetoothDevice dvc : arrDevices) {
+            if (device.getAddress().equalsIgnoreCase(dvc.getAddress())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 디바이스 스캔 콜백
@@ -162,13 +175,15 @@ public class BLeListActivity extends Activity {
             new BluetoothAdapter.LeScanCallback() {
                 @Override
                 public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+                    Log.d("RSSI", Integer.toString(rssi));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("RRSI", Integer.toString(rssi));
-                            mLeDeviceListAdapter.addDevice(device);
-                            mLeDeviceListAdapter.notifyDataSetChanged();
-
+                            if (!checkDuplicated(device)) {
+                                mLeDeviceListAdapter.add(device);
+                                mLeDeviceListAdapter.notifyDataSetChanged();
+                                arrDevices.add(device);
+                            }
                         }
                     });
                 }
@@ -187,7 +202,8 @@ public class BLeListActivity extends Activity {
 
     public void onClick_btnblecancle(View v) {
         this.finish();
-        mLeDeviceListAdapter.clear();
+        if (mLeDeviceListAdapter != null)
+            mLeDeviceListAdapter.clear();
         scanLeDevice(false);
     }
 

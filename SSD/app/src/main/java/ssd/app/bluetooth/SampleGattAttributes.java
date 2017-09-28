@@ -1,4 +1,4 @@
-package ssd.app;
+package ssd.app.bluetooth;
 
 import java.util.HashMap;
 

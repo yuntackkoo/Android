@@ -67,8 +67,7 @@
         <activity
             android:name=".BLeControlActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="BLE 제어" />
-
+            android:label="BLE 컨트롤" />
         <service
             android:name=".Connection"
             android:enabled="true"

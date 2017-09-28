@@ -1,4 +1,4 @@
-package ssd.app;
+package ssd.app.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ssd.app.R;
+
 /**
  * Created by EUNJAESHIN on 2017-09-12.
  */
 
-public class BLeAdapter extends BaseAdapter {
+public class BleAdapter extends BaseAdapter {
     private ArrayList<BluetoothDevice> mLeDevices;
     private LayoutInflater mInflator;
 
@@ -23,13 +25,13 @@ public class BLeAdapter extends BaseAdapter {
         TextView deviceAddress;
     }
 
-    public BLeAdapter(Activity activity) {
+    public BleAdapter(Activity activity) {
         super();
         mLeDevices = new ArrayList<BluetoothDevice>();
         mInflator = activity.getLayoutInflater();
     }
 
-    public void addDevice(BluetoothDevice device) {
+    public void add(BluetoothDevice device) {
         if(!mLeDevices.contains(device)) {
             mLeDevices.add(device);
         }
@@ -60,7 +62,7 @@ public class BLeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        BLeAdapter.ViewHolder viewHolder;
+        BleAdapter.ViewHolder viewHolder;
         // General ListView optimization code.
         if (view == null) {
             view = mInflator.inflate(R.layout.blelist_item, null);

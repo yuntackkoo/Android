@@ -10,7 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,14 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * For a given BLE device, this Activity provides the user interface to connect, display data,
- * and display GATT services and characteristics supported by the device.  The Activity
- * communicates with {@code BluetoothLeService}, which in turn interacts with the
- * Bluetooth LE API.
- */
+import ssd.app.bluetooth.BleService;
+import ssd.app.bluetooth.SampleGattAttributes;
 
-public class BLeControlActivity extends ActionBarActivity {
+public class BLeControlActivity extends AppCompatActivity {
     private final static String TAG = BLeControlActivity.class.getSimpleName();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
@@ -41,7 +37,7 @@ public class BLeControlActivity extends ActionBarActivity {
     private String mDeviceName;
     private String mDeviceAddress;
     private ExpandableListView mGattServicesList;
-    private BLeService mBluetoothLeService;
+    private BleService mBleService;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
@@ -55,18 +51,18 @@ public class BLeControlActivity extends ActionBarActivity {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mBluetoothLeService = ((BLeService.LocalBinder) service).getService();
-            if (!mBluetoothLeService.initialize()) {
+            mBleService = ((BleService.LocalBinder) service).getService();
+            if (!mBleService.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             }
             // Automatically connects to the device upon successful start-up initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
+            mBleService.connect(mDeviceAddress);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
+            mBleService = null;
         }
     };
 
@@ -80,20 +76,20 @@ public class BLeControlActivity extends ActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (BLeService.ACTION_GATT_CONNECTED.equals(action)) {
+            if (BleService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();
-            } else if (BLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+            } else if (BleService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 updateConnectionState(R.string.disconnected);
                 invalidateOptionsMenu();
                 clearUI();
-            } else if (BLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+            } else if (BleService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
-                displayGattServices(mBluetoothLeService.getSupportedGattServices());
-            } else if (BLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getStringExtra(BLeService.EXTRA_DATA));
+                displayGattServices(mBleService.getSupportedGattServices());
+            } else if (BleService.ACTION_DATA_AVAILABLE.equals(action)) {
+                displayData(intent.getStringExtra(BleService.EXTRA_DATA));
             }
         }
     };
@@ -115,15 +111,15 @@ public class BLeControlActivity extends ActionBarActivity {
                             // If there is an active notification on a characteristic, clear
                             // it first so it doesn't update the data field on the user interface.
                             if (mNotifyCharacteristic != null) {
-                                mBluetoothLeService.setCharacteristicNotification(
+                                mBleService.setCharacteristicNotification(
                                         mNotifyCharacteristic, false);
                                 mNotifyCharacteristic = null;
                             }
-                            mBluetoothLeService.readCharacteristic(characteristic);
+                            mBleService.readCharacteristic(characteristic);
                         }
                         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                             mNotifyCharacteristic = characteristic;
-                            mBluetoothLeService.setCharacteristicNotification(
+                            mBleService.setCharacteristicNotification(
                                     characteristic, true);
                         }
                         return true;
@@ -134,7 +130,7 @@ public class BLeControlActivity extends ActionBarActivity {
 
     private void clearUI() {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
-        mDataField.setText("No Data");
+        mDataField.setText(R.string.no_data);
     }
 
     @Override
@@ -142,10 +138,10 @@ public class BLeControlActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blegatt);
 
-        final Intent intent = getIntent();
-        mDeviceName = intent.getStringExtra("DEVICE_NAME");
-        mDeviceAddress = intent.getStringExtra("DEVICE_ADDRESS");
+        mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
+        mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
+        Log.d("NAME", mDeviceName);
         Log.d("ADDRESS", mDeviceAddress);
 
         // Sets up UI references.
@@ -155,9 +151,9 @@ public class BLeControlActivity extends ActionBarActivity {
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
-//        getActionBar().setTitle(mDeviceName);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-        Intent gattServiceIntent = new Intent(this, BLeService.class);
+        getSupportActionBar().setTitle(mDeviceName);;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -165,8 +161,8 @@ public class BLeControlActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+        if (mBleService != null) {
+            final boolean result = mBleService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
     }
@@ -181,7 +177,7 @@ public class BLeControlActivity extends ActionBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConnection);
-        mBluetoothLeService = null;
+        mBleService = null;
     }
 
     @Override
@@ -201,10 +197,10 @@ public class BLeControlActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
-                mBluetoothLeService.connect(mDeviceAddress);
+                mBleService.connect(mDeviceAddress);
                 return true;
             case R.id.menu_disconnect:
-                mBluetoothLeService.disconnect();
+                mBleService.disconnect();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -287,10 +283,10 @@ public class BLeControlActivity extends ActionBarActivity {
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BLeService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BleService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BleService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BleService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BleService.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
 }

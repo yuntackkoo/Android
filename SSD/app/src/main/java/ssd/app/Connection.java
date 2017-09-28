@@ -8,29 +8,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import config.ConfigData;
-import kr.re.nsr.crypto.util.Pack;
 import log.LogData;
 import protocol.Comunication;
-import protocol.Loging;
 import protocol.OperationCode;
 import protocol.Packet;
 import protocol.PacketProcess;
-import protocol.OperationCode;
 
 public class Connection extends Service {
     private SsdDB db = null;
