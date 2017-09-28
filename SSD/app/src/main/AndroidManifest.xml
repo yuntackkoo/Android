@@ -3,18 +3,13 @@
     package="ssd.app">
 
     <!-- 권한 등록 -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <!-- 커넥션 요구, 수락, 데이터 전송 등 블루투스 통신을 하기 위해 필요 -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- 디바이스 검색 시작 및 블루투스 설정 조작 -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -68,6 +63,7 @@
             android:name=".BLeControlActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="BLE 컨트롤" />
+        <service android:name=".bluetooth.BleService" android:enabled="true"/>
         <service
             android:name=".Connection"
             android:enabled="true"

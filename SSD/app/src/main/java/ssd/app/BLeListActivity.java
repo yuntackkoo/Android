@@ -72,10 +72,8 @@ public class BLeListActivity extends Activity {
         binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mScanning) {
-                    mBtAdapter.stopLeScan(mLeScanCallback);
-                    mScanning = false;
-                }
+                mBtAdapter.stopLeScan(mLeScanCallback);
+                mScanning = false;
                 final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
                 if (device == null) return;
                 final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
@@ -175,15 +173,13 @@ public class BLeListActivity extends Activity {
             new BluetoothAdapter.LeScanCallback() {
                 @Override
                 public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
-                    Log.d("RSSI", Integer.toString(rssi));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (!checkDuplicated(device)) {
-                                mLeDeviceListAdapter.add(device);
-                                mLeDeviceListAdapter.notifyDataSetChanged();
-                                arrDevices.add(device);
-                            }
+                            Log.d("RSSI", Integer.toString(rssi));
+                            mLeDeviceListAdapter.add(device);
+                            mLeDeviceListAdapter.notifyDataSetChanged();
+                            arrDevices.add(device);
                         }
                     });
                 }
