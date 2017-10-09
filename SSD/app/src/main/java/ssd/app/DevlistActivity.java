@@ -1,6 +1,9 @@
 package ssd.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -21,7 +24,7 @@ public class DevlistActivity extends AppCompatActivity {
     private MenuItem delete_btn;
     private SsdDB db;
     private ArrayList<String> dlist;
-    Comunication com = null;
+    UpdateRecever upre = null;
     ListViewClick listViewClick = new ListViewClick();
     ListViewLongClick listViewLongClick = new ListViewLongClick();
 
@@ -46,6 +49,10 @@ public class DevlistActivity extends AppCompatActivity {
 
         lv_Devlist.setOnItemClickListener(listViewClick);
         lv_Devlist.setOnItemLongClickListener(listViewLongClick);
+
+        upre = new UpdateRecever();
+        IntentFilter filter = new IntentFilter("UPDATE");
+        registerReceiver(upre,filter);
     }
 
     public void onClick_add_device(View v) {
@@ -132,7 +139,19 @@ public class DevlistActivity extends AppCompatActivity {
     protected void onDestroy() {
         lv_Adapter.setCheckBoxState(false);
         delete_btn.setVisible(false);
-
+        unregisterReceiver(upre);
         super.onDestroy();
+    }
+
+    class UpdateRecever extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals("UPDATE")){
+                for(int i =0;i<lv_Adapter.getCount();i++){
+                    lv_Adapter.chageState(intent.getStringExtra(lv_Adapter.getItemName(i)),i);
+                }
+                lv_Adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

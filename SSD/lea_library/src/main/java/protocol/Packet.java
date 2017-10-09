@@ -18,12 +18,15 @@ public class Packet {
 	public void setCode(int code) {
 		this.code = (byte)code;
 	}
+
 	public byte getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = (byte)id;
 	}
+
 	public byte[] getData() {
 		byte[] tmp = new byte[this.data.size()];
 		for (int i=0;i<this.data.size();i++){

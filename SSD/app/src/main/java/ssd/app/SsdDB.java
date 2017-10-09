@@ -27,7 +27,7 @@ public class SsdDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
+        db.execSQL("CREATE TABLE LOG (DEVICE_ID INTEGER,DATE TEXT);");
         db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT);");
     }
 
@@ -38,7 +38,7 @@ public class SsdDB extends SQLiteOpenHelper {
 
     public void insertLog(LogData log,byte id){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO LOG VALUES(" + id + "," + log.getId() + "," + log.getDate() + ");");
+        db.execSQL("INSERT INTO LOG VALUES (" + id +",'" + log.dateString() + "');");
         db.close();
     }
 
@@ -50,7 +50,7 @@ public class SsdDB extends SQLiteOpenHelper {
         return (byte)cursor.getInt(0);
     }
 
-    //디바이스를 추가 이름,주소,포트
+    //디바이스를 추가 이름,주소
     public void addDevice(String name,String addr){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO DEVICE (DEVICE_NAME,DEVICE_ADDR) " +
@@ -69,19 +69,13 @@ public class SsdDB extends SQLiteOpenHelper {
         return list;
     }
 
-    //유저 목록을 조회
-    public ArrayList<String> getUserList(){
-        ArrayList<String> list = new ArrayList<>();
-        return list;
-    }
-
     //로그 삭제 지금은 테스트용으로 디바이스 목록 삭제
     public void logDel(){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE DEVICE;");
         db.execSQL("CREATE TABLE DEVICE (DEVICE_ID INTEGER PRIMARY KEY AUTOINCREMENT,DEVICE_NAME TEXT,DEVICE_ADDR TEXT);");
         db.execSQL("DROP TABLE LOG");
-        db.execSQL("CREATE TABLE LOG (LOG_USER_ID INTEGER,DEVICE_ID INTEGER,DATE INTEGER);");
+        db.execSQL("CREATE TABLE LOG (DEVICE_ID INTEGER,DATE TEXT);");
         db.close();
     }
 
@@ -99,38 +93,32 @@ public class SsdDB extends SQLiteOpenHelper {
     }
 
     public Map<String,String> read(){
-        StringBuffer userid = new StringBuffer();
         StringBuffer deviceid = new StringBuffer();
         StringBuffer date = new StringBuffer();
         SQLiteDatabase db = getReadableDatabase();
         Map<String,String> map = new HashMap<>();
 
-        Cursor cur = db.rawQuery("SELECT * FROM LOG", null);
+        Cursor cur = db.rawQuery("SELECT DEVICE.DEVICE_NAME, LOG.DATE " +
+                "FROM LOG INNER JOIN DEVICE ON LOG.DEVICE_ID = DEVICE.DEVICE_ID ", null);
         while (cur.moveToNext()) {
-            userid.append(cur.getInt(0));
-            userid.append("\n");
-            deviceid.append(cur.getInt(1));
+            deviceid.append(cur.getString(0));
             deviceid.append("\n");
-            date.append(cur.getInt(2));
+            date.append(cur.getString(1));
             date.append("\n");
         }
-        map.put("userid",userid.toString());
         map.put("deviceid",deviceid.toString());
         map.put("date",date.toString());
         db.close();
         return map;
     }
 
-    public void initDevice(byte deviceid){
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("CREATE TABLE DEVICE" + Byte.toString(deviceid) + " (USERID INTEGER,USERNAME TEXT);");
-        db.close();
-    }
-
-    public void deleteDevice(byte deviceid){
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DROP TABLE DEVICE" + Byte.toString(deviceid)+ ");");
-        db.close();
+    public String getDeviceName(byte id){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.rawQuery("SELECT DEVICE_NAME FROM DEVICE " +
+                "WHERE DEVICE_ID = " + id + ";",null);
+        cur.moveToFirst();
+        String tmp = cur.getString(0);
+        return tmp;
     }
 
 }

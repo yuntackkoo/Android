@@ -13,13 +13,9 @@ import static ssd.app.DevlistActivity.lv_Adapter;
 public class AddDeviceActivity extends Activity {
 
     static String input_ip;
-    static String input_port;
-    static String input_username;
     static String input_devname;
     EditText edit_ipadd;
-    EditText edit_username;
     EditText edit_devname;
-    EditText edit_port;
     SsdDB db = null;
 
     @Override
@@ -30,7 +26,6 @@ public class AddDeviceActivity extends Activity {
         db = new SsdDB(this.getApplicationContext(),SsdDB.DBNAME,null,1);
 
         edit_ipadd = (EditText) findViewById(R.id.input_ipadd);
-        edit_username = (EditText) findViewById(R.id.input_username);
         edit_devname = (EditText) findViewById(R.id.input_devname);
     }
 
@@ -38,17 +33,13 @@ public class AddDeviceActivity extends Activity {
 
     public void onClick_adddevice (View v) {
         input_ip = edit_ipadd.getText().toString();
-        input_username = edit_username.getText().toString();
         input_devname = edit_devname.getText().toString();
 
         db.addDevice(input_devname,input_ip);
 
         finish();
 
-        add_Listview(input_ip,input_username,input_devname);
-
         Map map = db.deviceSerch(input_devname);
-        //db.initDevice(Byte.parseByte((String) map.get("id")));
     }
 
     public void add_Listview (String a, String b, String c) {

@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -23,12 +24,15 @@ import protocol.OperationCode;
 import protocol.Packet;
 import protocol.PacketProcess;
 
+import static java.lang.Thread.sleep;
+
 public class Connection extends Service {
     private SsdDB db = null;
     private Map<String,Comunication> deviceList = null;
     private ActivityManager activityManager;
     private Reciver reciver = null;
     private NotificationManager notimgr = null;
+    private ConnectionCheck coch = null;
 
     public Connection() {
     }
@@ -38,6 +42,8 @@ public class Connection extends Service {
         deviceList = new HashMap<>();
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         notimgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        coch = new ConnectionCheck();
+        coch.start();
         super.onCreate();
     }
 
@@ -60,6 +66,7 @@ public class Connection extends Service {
     @Override
     public void onDestroy() {
         unregisterReceiver(reciver);
+        coch = null;
         super.onDestroy();
     }
 
@@ -75,7 +82,7 @@ public class Connection extends Service {
                     currentcom.setP(new PacketProcess() {
                         @Override
                         public void doProcess(Comunication currentcom) {
-                            byte[] tmp = new byte[5];
+                            byte[] tmp = new byte[8];
                             //boolean invail = false;
                             boolean invail = true;
                             currentcom.setRecive(currentcom.getComPacket().getCurrent());
@@ -101,19 +108,19 @@ public class Connection extends Service {
                                         break;
                                     //다른 기기가 문을 열때
                                     case OperationCode.Unlock_Other:
+                                        System.out.println("다른곳에서 문 열림!!!!!!!!!!!!!");
                                         if (deviceList.get(name).getComPacket().getCurrent().getCode() == 64) {
                                             Notification noti = new Notification.Builder(getApplicationContext())
                                                     .setSmallIcon(R.drawable.bt_unlock)
-                                                    .setContentTitle(new Byte(deviceList.get(name).getThisId()).toString())
+                                                    .setContentTitle(db.getDeviceName(new Byte(deviceList.get(name).getThisId())))
                                                     .setContentText("잠금해제")
                                                     .setTicker("알림")
                                                     .build();
                                             notimgr.notify(deviceList.get(name).getThisId(), noti);
                                             Packet p = deviceList.get(name).getRecive();
-                                            System.arraycopy(p.getData(), 0, tmp, 0, 5);
+                                            System.arraycopy(p.getData(), 0, tmp, 0, 8);
                                             LogData log = new LogData(tmp);
-                                            Log.e(new Integer(log.getDate()).toString(), "asdf");
-                                            db.insertLog(log, (byte) 0);
+                                            db.insertLog(log, new Byte(deviceList.get(name).getThisId()));
                                         }
                                         break;
                                 }
@@ -145,10 +152,13 @@ public class Connection extends Service {
                             Packet p = new Packet();
                             p.setCode(OperationCode.UnLock);
                             p.setId(0);
-                            p.setData(new LogData((byte) 0).getByte());
+                            p.setData(new LogData().getByte());
                             currentcom.send(p);
                         }
                     }, 2000);
+                    Intent updateintent = new Intent("UPDATE");
+                    updateintent.putExtra(name,"연결중");
+                    sendBroadcast(updateintent);
                 } else{
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
@@ -157,10 +167,36 @@ public class Connection extends Service {
                             Packet p = new Packet();
                             p.setCode(OperationCode.UnLock);
                             p.setId(0);
-                            p.setData(new LogData((byte) 0).getByte());
-                            currentcom.send(p);
+                            p.setData(new LogData().getByte());
+                                currentcom.send(p);
                         }
                     }, 1000);
+                }
+            }
+        }
+    }
+
+    class ConnectionCheck extends Thread{
+        @Override
+        public void run() {
+            Comunication currentcom;
+            Intent updateIntent = new Intent("UPDATE");
+            for(;;){
+                for (String key :
+                        deviceList.keySet()) {
+                    currentcom = deviceList.get(key);
+                    if(currentcom.getComPacket().isConnect()) {
+                        updateIntent.putExtra(key, "연결중");
+                    } else {
+                        deviceList.remove(key);
+                        updateIntent.putExtra(key,"연결끊김");
+                    }
+                }
+                sendBroadcast(updateIntent);
+                try {
+                    sleep(150000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

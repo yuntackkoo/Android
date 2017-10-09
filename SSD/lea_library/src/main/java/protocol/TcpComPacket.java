@@ -18,6 +18,7 @@ public class TcpComPacket extends ComPacket{
 	private byte[] buffer = new byte[33];
 	private PacketProcess process = null;
 	private int port = 0;
+	private boolean conneted = false;
 	
 	public TcpComPacket(String dn, String port) {
 		try{
@@ -25,6 +26,8 @@ public class TcpComPacket extends ComPacket{
 			tcp_send = new Socket();
 			socket = new InetSocketAddress(dn,this.port);
 			tcp_send.connect(socket,20000);
+			System.out.println("연결 성공!!!!!!");
+			this.conneted = true;
 			in = new BufferedInputStream(tcp_send.getInputStream());
 			out = new BufferedOutputStream(tcp_send.getOutputStream());
 			tcp_send.setSoTimeout(100000);
@@ -42,7 +45,9 @@ public class TcpComPacket extends ComPacket{
 		try {
 			//byte[] tmp = super.getCryptoModule().enCrypt(send);
 			send.fillPadding();
-			if(isConnect()) {
+			System.out.println("패킷 전송 시도중!!!!!!");
+			if(true) {
+				System.out.println("패킷 전송!!!!!!");
 				out.write(send.getPacket());
 				out.flush();
 			} else{
@@ -52,7 +57,7 @@ public class TcpComPacket extends ComPacket{
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
 			//tmp = null;
 		}
@@ -64,8 +69,10 @@ public class TcpComPacket extends ComPacket{
 		boolean flag = true;
 		for(;flag;){
 			try {
-				if(isConnect()) {
+				if(true) {
+					System.out.println("패킷 받기 시도중!!!!!");
 					in.read(buffer);
+					System.out.println("패킷 받음!!!!!!!!!");
 				} else {
 					break;
 				}
@@ -109,7 +116,12 @@ public class TcpComPacket extends ComPacket{
 
 	@Override
 	public boolean isConnect() {
-		return tcp_send.isConnected();
+		try {
+			//conneted = tcp_send.getKeepAlive();
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+		return conneted;
 	}
 
 	@Override
