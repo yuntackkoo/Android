@@ -112,6 +112,28 @@ public class SsdDB extends SQLiteOpenHelper {
         return map;
     }
 
+    public Map<String,String> read(String name){
+        StringBuffer deviceid = new StringBuffer();
+        StringBuffer date = new StringBuffer();
+        SQLiteDatabase db = getReadableDatabase();
+        Map<String,String> map = new HashMap<>();
+
+        Cursor cur = db.rawQuery("SELECT DEVICE.DEVICE_NAME, LOG.DATE " +
+                "FROM LOG INNER JOIN DEVICE ON LOG.DEVICE_ID = DEVICE.DEVICE_ID" +
+                " WHERE DEVICE.DEVICE_NAME = '" + name + "';", null);
+        while (cur.moveToNext()) {
+            deviceid.append(cur.getString(0));
+            deviceid.append("\n");
+
+            date.append(cur.getString(1));
+            date.append("\n");
+        }
+        map.put("deviceid",deviceid.toString());
+        map.put("date",date.toString());
+        db.close();
+        return map;
+    }
+
     public String getDeviceName(byte id){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.rawQuery("SELECT DEVICE_NAME FROM DEVICE " +
