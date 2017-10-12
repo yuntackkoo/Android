@@ -3,7 +3,9 @@
     package="ssd.app">
 
     <!-- 권한 등록 -->
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -21,9 +23,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
-
             <!-- 화면 회전 시 새로 onCreate 수행 방지 -->
-
 
             <!-- 메인 -->
             <intent-filter>
@@ -63,7 +63,14 @@
             android:name=".BLeControlActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="BLE 컨트롤" />
-        <service android:name=".bluetooth.BleService" android:enabled="true"/>
+
+        <service
+            android:name=".bluetooth.BleService"
+            android:enabled="true" />
+        <service
+            android:name="ssd.app.bluetooth.BTCTemplateService"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:enabled="true"></service>
         <service
             android:name=".Connection"
             android:enabled="true"

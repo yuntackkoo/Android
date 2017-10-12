@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
@@ -23,8 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ssd.app.bluetooth.BleManager;
 import ssd.app.bluetooth.BleService;
 import ssd.app.bluetooth.SampleGattAttributes;
+import ssd.app.bluetooth.TransactionBuilder;
+import ssd.app.bluetooth.TransactionReceiver;
 
 public class BLeControlActivity extends AppCompatActivity {
     private final static String TAG = BLeControlActivity.class.getSimpleName();
@@ -34,6 +39,7 @@ public class BLeControlActivity extends AppCompatActivity {
 
     private TextView mConnectionState;
     private TextView mDataField;
+    private Button mSendButton;
     private String mDeviceName;
     private String mDeviceAddress;
     private ExpandableListView mGattServicesList;
@@ -46,6 +52,12 @@ public class BLeControlActivity extends AppCompatActivity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
+    private TransactionBuilder mTransactionBuilder = null;
+    private TransactionReceiver mTransactionReceiver = null;
+
+    private static Handler mActivityHandler = null;
+    private BleManager mBleManager = null;
+
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -57,7 +69,9 @@ public class BLeControlActivity extends AppCompatActivity {
                 finish();
             }
             // Automatically connects to the device upon successful start-up initialization.
-            mBleService.connect(mDeviceAddress);
+
+//            mBleService.connect(mDeviceAddress);
+            BLeListActivity.mService.connectDevice(mDeviceAddress);
         }
 
         @Override
@@ -151,7 +165,19 @@ public class BLeControlActivity extends AppCompatActivity {
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
-        getSupportActionBar().setTitle(mDeviceName);;
+        mSendButton = (Button) findViewById(R.id.btn_send);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Hi", "Test");
+                String message = "hi";
+                if (BLeListActivity.mService != null && message != null)
+                    BLeListActivity.mService.sendMessageToRemote(message);
+            }
+        });
+
+        getSupportActionBar().setTitle(mDeviceName);
+        ;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
@@ -165,6 +191,10 @@ public class BLeControlActivity extends AppCompatActivity {
             final boolean result = mBleService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
+    }
+
+    public void onClick_send(View v) {
+
     }
 
     @Override
