@@ -94,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClick_btunlock(View view) {
         Intent intent_BLElist = new Intent(this, BLeListActivity.class);
         startActivity(intent_BLElist);
-        // btTask = new BtTask();
-        // btTask.execute();
-        //startActivity(new Intent(SettingsActivity.ACTION_BLUETOOTH_SETTINGS)); 블루투스 설정 화면으로 이동
     }
 
     public void onClick_devlist(View view) {

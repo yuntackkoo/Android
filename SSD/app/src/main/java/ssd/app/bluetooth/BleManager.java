@@ -25,6 +25,7 @@ public class BleManager {
     private static final String TAG = "BleManager";
 
     // Constants that indicate the current connection state
+    // 커넥션 상태를 나타냄
     public static final int STATE_ERROR = -1;
     public static final int STATE_NONE = 0;        // Initialized
     public static final int STATE_IDLE = 1;        // Not connected
@@ -33,13 +34,14 @@ public class BleManager {
     public static final int STATE_CONNECTED = 16;    // Connected
 
     // Message types sent from the BluetoothManager to Handler
+    // Handler로 전달된 메시지의 유형을 나타냄
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
-    public static final long SCAN_PERIOD = 5 * 1000;    // Stops scanning after a pre-defined scan period.
+    public static final long SCAN_PERIOD = 5 * 1000; // Stops scanning after a pre-defined scan period.
     public static final long SCAN_INTERVAL = 5 * 60 * 1000;
 
     // System, Management
@@ -65,16 +67,16 @@ public class BleManager {
             = new ArrayList<BluetoothGattCharacteristic>();
     private BluetoothGattCharacteristic mDefaultChar = null;
 
-
     // Parameters
     private int mState = -1;
 
-
     /**
      * Constructor. Prepares a new Bluetooth session.
-     *
-     * @param context   The UI Activity Context
-     * @param //handler A Listener to receive messages back to the UI Activity
+     * 생성자, 새로운 블루투스 세션을 준비합니다
+     * @param "context" The UI Activity Context
+     * UI 액티비티 컨텍스트
+     * @param "handler" A Listener to receive messages back to the UI Activity
+     * UI 액티비티로 메시지를 받는 리스너
      */
     private BleManager(Context context, Handler h) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -277,7 +279,7 @@ public class BleManager {
                 // call below function instead
                 //startLeScan(UUID[], BluetoothAdapter.LeScanCallback);
 
-                // Stops scanning after a pre-defined scan period.
+                // SCAN_PERIOD (5초) 지난 후 스캔 중단
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

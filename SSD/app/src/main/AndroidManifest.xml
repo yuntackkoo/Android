@@ -59,14 +59,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="BLE 리스트"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-        <activity
-            android:name=".BLeControlActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="BLE 컨트롤" />
-
-        <service
-            android:name=".bluetooth.BleService"
-            android:enabled="true" />
         <service
             android:name="ssd.app.bluetooth.BTCTemplateService"
             android:configChanges="keyboardHidden|orientation|screenSize"
