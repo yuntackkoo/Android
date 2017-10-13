@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by EJSHIN on 2017-10-11.
+ * 연결된 장치의 정보를 저장하고 가져오고 리셋하고..하는 메소드들
  */
 
 public class ConnectionInfo {

@@ -30,8 +30,6 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import ssd.app.R;
-
 public class BTCTemplateService extends Service {
     private static final String TAG = "LLService";
 
@@ -153,13 +151,13 @@ public class BTCTemplateService extends Service {
     private void sendMessageToDevice(String message) {
         if (message == null || message.length() < 1)
             return;
-        Log.d("Hi", "Test2 "+ message);
+        Log.d("Send 1", message);
         TransactionBuilder.Transaction transaction = mTransactionBuilder.makeTransaction();
         transaction.begin();
         transaction.setMessage(message);
         transaction.settingFinished();
         transaction.sendTransaction();
-        Log.d("Hi", "Test3");
+        Log.d("Send 2", "DONE");
     }
 
     /**
@@ -283,6 +281,10 @@ public class BTCTemplateService extends Service {
      */
     public String getDeviceName() {
         return mConnectionInfo.getDeviceName();
+    }
+
+    public String getDeviceAddr() {
+        return mConnectionInfo.getDeviceAddress();
     }
 
     /**

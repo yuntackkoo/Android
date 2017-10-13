@@ -6,7 +6,6 @@
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,7 +27,6 @@
             <!-- 메인 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,14 +57,19 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="BLE 리스트"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".BLeControlActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="BLE 제어" />
+
         <service
-            android:name="ssd.app.bluetooth.BTCTemplateService"
+            android:name=".bluetooth.BTCTemplateService"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:enabled="true"></service>
+            android:enabled="true" />
         <service
             android:name=".Connection"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
     </application>
 

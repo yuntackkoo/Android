@@ -57,6 +57,7 @@ public class BLeListActivity extends Activity {
         mBleManager = BleManager.getInstance(getApplicationContext(), mActivityHandler);
         mBleManager.setScanCallback(mLeScanCallback);
 
+        // 스캔 버튼 클릭리스너
         binding_BLElist.btnScanning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,16 +68,21 @@ public class BLeListActivity extends Activity {
 
         mLeDeviceListAdapter = new BleAdapter(BLeListActivity.this);
         binding_BLElist.BleScanlist.setAdapter(mLeDeviceListAdapter);
+
+        // 스캔된 장치 아이템 클릭리스너
         binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mBtAdapter.cancelDiscovery();
+//                mBtAdapter.cancelDiscovery();
+                if (mBleManager.getState() == BleManager.STATE_SCANNING)
+                    stopDiscovery(); // 스캔중에 클릭시 스캔 중지
                 final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
                 if (device == null) return;
-//                final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
-//                intent.putExtra(BLeControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-//                intent.putExtra(BLeControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-//                startActivity(intent);
+                Log.d("BLeListActivity", device.getName() + " " + device.getAddress());
+                final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
+                intent.putExtra("Device_Name", device.getName());
+                intent.putExtra("Device_Address", device.getAddress());
+                startActivity(intent);
             }
         });
 
@@ -190,7 +196,9 @@ public class BLeListActivity extends Activity {
 
 
     private void stopDiscovery() {
-        //mBleManager.scanLeDevice(false);
+        Log.d("BLeListActivity - ", "stopDiscovery()");
+        binding_BLElist.btnScanning.setVisibility(View.VISIBLE);
+        mBleManager.scanLeDevice(false);
     }
 
     public void onClick_btnscanning(View v) {
