@@ -212,7 +212,7 @@ public class BTCTemplateService extends Service {
      * Setup and initialize BLE manager
      */
     public void setupBLE() {
-        Log.d(TAG, "Service - setupBLE()");
+        Log.d(TAG, "# Service - setupBLE()");
 
         // Initialize the BluetoothManager to perform bluetooth le scanning
         if (mBleManager == null)
@@ -319,7 +319,7 @@ public class BTCTemplateService extends Service {
     /**
      * Receives messages from bluetooth manager
      */
-    class ServiceHandler extends Handler {
+    public class ServiceHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
 
@@ -364,19 +364,20 @@ public class BTCTemplateService extends Service {
                     int readCount = strMsg.length();
                     // send bytes in the buffer to activity
                     if (strMsg != null && strMsg.length() > 0) {
+                        Log.d("READTEST","1");
                         mActivityHandler.obtainMessage(Constants.MESSAGE_READ_CHAT_DATA, strMsg)
                                 .sendToTarget();
-                        int command = mCommandParser.setString(strMsg);
-                        if (command == CommandParser.COMMAND_THINGSPEAK) {
-                            String parameters = mCommandParser.getParameterString();
-                            StringBuilder requestUrl = new StringBuilder("http://184.106.153.149/update?");
-                            if (parameters != null && parameters.length() > 0)
-                                requestUrl.append(parameters);
-
-                            //Log.d("# Find thingspeak command. URL = "+requestUrl);
-
-                            mCommandParser.resetParser();
-                        }
+//                        int command = mCommandParser.setString(strMsg);
+//                        if (command == CommandParser.COMMAND_THINGSPEAK) {
+//                            String parameters = mCommandParser.getParameterString();
+//                            StringBuilder requestUrl = new StringBuilder("http://184.106.153.149/update?");
+//                            if (parameters != null && parameters.length() > 0)
+//                                requestUrl.append(parameters);
+//
+//                            Log.d("# Find thingspeak command. URL = "+requestUrl);
+//
+//                            mCommandParser.resetParser();
+//                        }
                     }
                     break;
 

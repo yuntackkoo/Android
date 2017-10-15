@@ -38,6 +38,7 @@ public class BLeListActivity extends Activity {
     private BluetoothAdapter mBtAdapter;
     private BleManager mBleManager;
     private ActivityHandler mActivityHandler;
+    BLeControlActivity.ActivityHandler mActivityHandler_setup;
 
     private static final long SCAN_PERIOD = 5 * 1000;
 
@@ -52,39 +53,10 @@ public class BLeListActivity extends Activity {
         BLeListActivity.this.setFinishOnTouchOutside(false);
 
         mActivityHandler = new ActivityHandler();
-
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBleManager = BleManager.getInstance(getApplicationContext(), mActivityHandler);
-        mBleManager.setScanCallback(mLeScanCallback);
-
-        // 스캔 버튼 클릭리스너
-        binding_BLElist.btnScanning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doDiscovery();
-                view.setVisibility(View.INVISIBLE);
-            }
-        });
+        mActivityHandler_setup = new BLeControlActivity.ActivityHandler();
 
         mLeDeviceListAdapter = new BleAdapter(BLeListActivity.this);
         binding_BLElist.BleScanlist.setAdapter(mLeDeviceListAdapter);
-
-        // 스캔된 장치 아이템 클릭리스너
-        binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                mBtAdapter.cancelDiscovery();
-                if (mBleManager.getState() == BleManager.STATE_SCANNING)
-                    stopDiscovery(); // 스캔중에 클릭시 스캔 중지
-                final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-                if (device == null) return;
-                Log.d("BLeListActivity", device.getName() + " " + device.getAddress());
-                final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
-                intent.putExtra("Device_Name", device.getName());
-                intent.putExtra("Device_Address", device.getAddress());
-                startActivity(intent);
-            }
-        });
 
         doStartService();
     }
@@ -143,12 +115,15 @@ public class BLeListActivity extends Activity {
             finish();
         }
 
-        mService.setupService(mActivityHandler);
+        mService.setupService(mActivityHandler_setup); //BLeControlActivity의 핸들러 사용
 
         // 블루투스가 켜져있지 않으면 실행
         if (!mService.isBluetoothEnabled()) {
             Intent intent_enablebt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent_enablebt, Constants.REQUEST_ENABLE_BT);
+        } else {
+            mService.setupBLE(); // BleManager.getInstance(mContext, mServiceHandler);
+            initialize2nd();
         }
 
         // 위치 권한 퍼미션 체크
@@ -219,6 +194,56 @@ public class BLeListActivity extends Activity {
         // super.onBackPressed();
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a BT session
+                    Log.d("BLeListActivity","onActivityResult");
+                    mService.setupBLE(); // BleManager.getInstance(mContext, mServiceHandler);
+                    initialize2nd();
+                } else {
+                    // User did not enable Bluetooth or an error occured
+                    Log.d("BLeListActivity", "BT is not enabled");
+                    Toast.makeText(this, "블루투스가 꺼져 있습니다.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    private void initialize2nd() {
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBleManager = BleManager.getInstance(getApplicationContext(), null);
+        mBleManager.setScanCallback(mLeScanCallback);
+
+        // 스캔 버튼 클릭리스너
+        binding_BLElist.btnScanning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doDiscovery();
+                view.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // 스캔된 장치 아이템 클릭리스너
+        binding_BLElist.BleScanlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                mBtAdapter.cancelDiscovery();
+                if (mBleManager.getState() == BleManager.STATE_SCANNING)
+                    stopDiscovery(); // 스캔중에 클릭시 스캔 중지
+                final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+                if (device == null) return;
+                Log.d("BLeListActivity", device.getName() + " " + device.getAddress());
+                final Intent intent = new Intent(BLeListActivity.this, BLeControlActivity.class);
+                intent.putExtra("Device_Name", device.getName());
+                intent.putExtra("Device_Address", device.getAddress());
+                startActivity(intent);
+            }
+        });
+    }
+
     public class ActivityHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -227,4 +252,5 @@ public class BLeListActivity extends Activity {
             super.handleMessage(msg);
         }
     }
+
 }

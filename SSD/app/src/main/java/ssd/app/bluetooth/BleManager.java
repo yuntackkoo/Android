@@ -541,7 +541,7 @@ public class BleManager {
                 //	stringBuilder.append(String.format("%02X ", byteChar));
                 stringBuilder.append(data);
                 Log.d(TAG, stringBuilder.toString());
-
+                Log.d("READTEST", "0");
                 mHandler.obtainMessage(MESSAGE_READ, new String(data)).sendToTarget();
             }
 
