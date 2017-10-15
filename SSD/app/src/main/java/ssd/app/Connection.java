@@ -157,7 +157,7 @@ public class Connection extends Service {
                         }
                     }, 2000);
                     Intent updateintent = new Intent("UPDATE");
-                    updateintent.putExtra(name,"연결중");
+                    updateintent.putExtra(name, "연결중");
                     sendBroadcast(updateintent);
                 } else{
                     Timer timer = new Timer();

@@ -31,6 +31,7 @@ public class TcpComPacket extends ComPacket{
 			in = new BufferedInputStream(tcp_send.getInputStream());
 			out = new BufferedOutputStream(tcp_send.getOutputStream());
 			tcp_send.setSoTimeout(100000);
+			tcp_send.setKeepAlive(true);
 		}
 		catch (ConnectException e){
 			System.out.println(e.getMessage());
@@ -116,12 +117,8 @@ public class TcpComPacket extends ComPacket{
 
 	@Override
 	public boolean isConnect() {
-		try {
-			//conneted = tcp_send.getKeepAlive();
-		} catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-		return conneted;
+		this.conneted = tcp_send.isConnected();
+		return tcp_send.isConnected();
 	}
 
 	@Override
