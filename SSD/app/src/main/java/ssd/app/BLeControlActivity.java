@@ -69,6 +69,7 @@ public class BLeControlActivity extends AppCompatActivity {
             Log.d("setConnection() - ", sDevAddr);
 
             if (sDevAddr != null && mService != null) {
+                Log.d("Gatt Connect", "1");
                 mService.connectDevice(sDevAddr);
 
                 if (sDevName.equals(mService.getDeviceName()) &&

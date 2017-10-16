@@ -15,11 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import protocol.ComPacket;
+import protocol.Packet;
+import protocol.PacketProcess;
+
 /**
  * Created by admin on 2017-10-10.
  */
 
-public class BleManager {
+public class BleManager extends ComPacket {
 
     // Debugging
     private static final String TAG = "BleManager";
@@ -66,6 +70,8 @@ public class BleManager {
     private ArrayList<BluetoothGattCharacteristic> mWritableCharacteristics
             = new ArrayList<BluetoothGattCharacteristic>();
     private BluetoothGattCharacteristic mDefaultChar = null;
+
+    private PacketProcess process = null;
 
     // Parameters
     private int mState = -1;
@@ -119,6 +125,7 @@ public class BleManager {
     }
 
 
+    /*****************************************************
     /*****************************************************
      *	Private methods
      ******************************************************/
@@ -337,6 +344,7 @@ public class BleManager {
         return isScanStarted;
     }
 
+    /* 사용안함
     public boolean connectGatt(Context c, boolean bAutoReconnect, BluetoothDevice device) {
         if (c == null || device == null)
             return false;
@@ -352,6 +360,7 @@ public class BleManager {
         mHandler.obtainMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTING, 0).sendToTarget();
         return true;
     }
+    */
 
     public boolean connectGatt(Context c, boolean bAutoReconnect, String address) {
         if (c == null || address == null)
@@ -364,7 +373,7 @@ public class BleManager {
                 return true;
             }
         }
-
+        Log.d("Gatt Connect", "3");
         BluetoothDevice device =
                 BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         if (device == null) {
@@ -375,12 +384,13 @@ public class BleManager {
         mGattServices.clear();
         mGattCharacteristics.clear();
         mWritableCharacteristics.clear();
-
+        Log.d("Gatt Connect", "4");
         mBluetoothGatt = device.connectGatt(c, bAutoReconnect, mGattCallback);
         mDefaultDevice = device;
 
         mState = STATE_CONNECTING;
         mHandler.obtainMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTING, 0).sendToTarget();
+        Log.d("Gatt Connect", "5");
         return true;
     }
 
@@ -553,5 +563,21 @@ public class BleManager {
         ;
     };
 
+    @Override
+    public boolean send(Packet send) {
+        send.fillPadding();
+        return false;
+    }
 
+    @Override
+    public void receive() {
+        if(isConnect()) {
+            this.process.doProcess(super.getCom());
+        }
+    }
+
+    @Override
+    public boolean isConnect() {
+        return false;
+    }
 }

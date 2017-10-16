@@ -30,6 +30,7 @@ public class TransactionBuilder {
 
     public class Transaction {
 
+
         public static final int MAX_MESSAGE_LENGTH = 16;
 
         // Transaction instance status
@@ -128,7 +129,6 @@ public class TransactionBuilder {
             }
             return null;
         }
-
     }    // End of class Transaction
 
 }

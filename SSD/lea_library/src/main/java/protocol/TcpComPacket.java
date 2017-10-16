@@ -19,20 +19,20 @@ public class TcpComPacket extends ComPacket{
 	private PacketProcess process = null;
 	private int port = 0;
 	private boolean conneted = false;
-	
+
 	public TcpComPacket(String dn, String port) {
-		try{
-			this.port = Integer.parseInt(port);
-			tcp_send = new Socket();
-			socket = new InetSocketAddress(dn,this.port);
-			tcp_send.connect(socket,20000);
-			System.out.println("연결 성공!!!!!!");
-			this.conneted = true;
-			in = new BufferedInputStream(tcp_send.getInputStream());
-			out = new BufferedOutputStream(tcp_send.getOutputStream());
-			tcp_send.setSoTimeout(100000);
-			tcp_send.setKeepAlive(true);
-		}
+			try{
+				this.port = Integer.parseInt(port);
+				tcp_send = new Socket();
+				socket = new InetSocketAddress(dn,this.port);
+				tcp_send.connect(socket,20000);
+				System.out.println("연결 성공!!!!!!");
+				this.conneted = true;
+				in = new BufferedInputStream(tcp_send.getInputStream());
+				out = new BufferedOutputStream(tcp_send.getOutputStream());
+				tcp_send.setSoTimeout(100000);
+				tcp_send.setKeepAlive(true);
+			}
 		catch (ConnectException e){
 			System.out.println(e.getMessage());
 		}
@@ -42,7 +42,7 @@ public class TcpComPacket extends ComPacket{
 	}
 
 	@Override
-	public void send(Packet send) {
+	public boolean send(Packet send) {
 		try {
 			//byte[] tmp = super.getCryptoModule().enCrypt(send);
 			send.fillPadding();
@@ -62,6 +62,7 @@ public class TcpComPacket extends ComPacket{
 		} finally {
 			//tmp = null;
 		}
+		return false;
 	}
 
 	@Override

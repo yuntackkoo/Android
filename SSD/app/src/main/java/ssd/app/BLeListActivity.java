@@ -74,7 +74,7 @@ public class BLeListActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        doStopService();
+
         if (mBtAdapter != null) {
             mBtAdapter.cancelDiscovery();
         }
@@ -101,6 +101,7 @@ public class BLeListActivity extends Activity {
     } // 서비스 시작
 
     private void doStopService() {
+        unbindService(mServiceConn); // ServiceConnected leaked 해결
         mService.finalizeService();
         stopService(new Intent(this, BTCTemplateService.class));
     } // 서비스 중단
@@ -183,6 +184,7 @@ public class BLeListActivity extends Activity {
     public void onClick_btnblecancle(View v) {
         this.finish();
         mBleManager.scanLeDevice(false);
+        doStopService();
         if (mLeDeviceListAdapter != null) {
             mLeDeviceListAdapter.clear();
             mLeDeviceListAdapter.notifyDataSetChanged();

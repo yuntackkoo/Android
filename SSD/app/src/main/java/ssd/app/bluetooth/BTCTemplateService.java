@@ -250,8 +250,10 @@ public class BTCTemplateService extends Service {
     public void connectDevice(String address) {
         if (address != null && mBleManager != null) {
             //mBleManager.disconnect();
+            Log.d("Gatt Connect", "2");
 
             if (mBleManager.connectGatt(mContext, true, address)) {
+                Log.d("Gatt Connect", "6");
                 Log.d("BTCTemplateService", "장치에 연결");
                 BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
                 mConnectionInfo.setDeviceAddress(address);
@@ -265,16 +267,18 @@ public class BTCTemplateService extends Service {
      *
      * @param device The BluetoothDevice to connect
      */
+    /*
     public void connectDevice(BluetoothDevice device) {
-        if (device != null && mBleManager != null) {
+        if(device != null && mBleManager != null) {
             //mBleManager.disconnect();
 
-            if (mBleManager.connectGatt(mContext, true, device)) {
+            if(mBleManager.connectGatt(mContext, true, device)) {
                 mConnectionInfo.setDeviceAddress(device.getAddress());
                 mConnectionInfo.setDeviceName(device.getName());
             }
         }
     }
+    */
 
     /**
      * Get connected device name
