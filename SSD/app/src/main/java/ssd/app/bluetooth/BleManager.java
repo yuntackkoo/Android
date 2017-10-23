@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import log.LogData;
 import protocol.ComPacket;
+import protocol.OperationCode;
 import protocol.Packet;
 import protocol.PacketProcess;
 
@@ -71,6 +73,7 @@ public class BleManager extends ComPacket {
             = new ArrayList<BluetoothGattCharacteristic>();
     private BluetoothGattCharacteristic mDefaultChar = null;
 
+    private int seq_num = 0;
     private PacketProcess process = null;
 
     // Parameters
@@ -79,10 +82,11 @@ public class BleManager extends ComPacket {
     /**
      * Constructor. Prepares a new Bluetooth session.
      * 생성자, 새로운 블루투스 세션을 준비합니다
+     *
      * @param "context" The UI Activity Context
-     * UI 액티비티 컨텍스트
+     *                  UI 액티비티 컨텍스트
      * @param "handler" A Listener to receive messages back to the UI Activity
-     * UI 액티비티로 메시지를 받는 리스너
+     *                  UI 액티비티로 메시지를 받는 리스너
      */
     private BleManager(Context context, Handler h) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -126,7 +130,7 @@ public class BleManager extends ComPacket {
 
 
     /*****************************************************
-    /*****************************************************
+     /*****************************************************
      *	Private methods
      ******************************************************/
 
@@ -565,13 +569,18 @@ public class BleManager extends ComPacket {
 
     @Override
     public boolean send(Packet send) {
+        seq_num++;
+        send.setNonce(seq_num);
+        send.setCode(OperationCode.UnLock);
+        send.setId(0);
+        send.setData(new LogData().getByte());
         send.fillPadding();
         return false;
     }
 
     @Override
     public void receive() {
-        if(isConnect()) {
+        if (isConnect()) {
             this.process.doProcess(super.getCom());
         }
     }

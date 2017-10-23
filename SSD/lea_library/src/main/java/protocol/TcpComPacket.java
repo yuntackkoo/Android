@@ -43,24 +43,24 @@ public class TcpComPacket extends ComPacket{
 
 	@Override
 	public boolean send(Packet send) {
-		try {
-			//byte[] tmp = super.getCryptoModule().enCrypt(send);
-			send.fillPadding();
-			System.out.println("패킷 전송 시도중!!!!!!");
-			if(true) {
-				System.out.println("패킷 전송!!!!!!");
-				out.write(send.getPacket());
-				out.flush();
-			} else{
-				if(out != null) {
-					out.close();
+			try {
+				//byte[] tmp = super.getCryptoModule().enCrypt(send);
+				send.fillPadding();
+				System.out.println("패킷 전송 시도중!!!!!!");
+				if(true) {
+					System.out.println("패킷 전송!!!!!!");
+					out.write(send.getPacket());
+					out.flush();
+				} else{
+					if(out != null) {
+						out.close();
+					}
 				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-		} finally {
-			//tmp = null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+			} finally {
+				//tmp = null;
 		}
 		return false;
 	}

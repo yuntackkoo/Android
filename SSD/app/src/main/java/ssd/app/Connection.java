@@ -8,10 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +21,6 @@ import protocol.Comunication;
 import protocol.OperationCode;
 import protocol.Packet;
 import protocol.PacketProcess;
-
-import static java.lang.Thread.sleep;
 
 public class Connection extends Service {
     private SsdDB db = null;
@@ -168,7 +164,7 @@ public class Connection extends Service {
                             p.setCode(OperationCode.UnLock);
                             p.setId(0);
                             p.setData(new LogData().getByte());
-                                currentcom.send(p);
+                            currentcom.send(p);
                         }
                     }, 1000);
                 }

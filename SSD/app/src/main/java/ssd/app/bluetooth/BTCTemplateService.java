@@ -30,6 +30,8 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import protocol.Packet;
+
 public class BTCTemplateService extends Service {
     private static final String TAG = "LLService";
 
@@ -49,7 +51,6 @@ public class BTCTemplateService extends Service {
 
     private TransactionBuilder mTransactionBuilder = null;
     private TransactionReceiver mTransactionReceiver = null;
-
 
     /*****************************************************
      *	Overrided methods
@@ -149,12 +150,14 @@ public class BTCTemplateService extends Service {
      * @param message message to send
      */
     private void sendMessageToDevice(String message) {
+        Packet packet = new Packet();
+        mBleManager.send(packet);
         if (message == null || message.length() < 1)
             return;
         Log.d("Send 1", message);
         TransactionBuilder.Transaction transaction = mTransactionBuilder.makeTransaction();
         transaction.begin();
-        transaction.setMessage(message);
+        transaction.setMessage(packet.getData());
         transaction.settingFinished();
         transaction.sendTransaction();
         Log.d("Send 2", "DONE");

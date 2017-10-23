@@ -1,10 +1,5 @@
 package protocol;
 
-import java.awt.SystemTray;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Timer;
-
 /**
  * Created by 사용자 on 2017-05-29.
  */

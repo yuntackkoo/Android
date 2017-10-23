@@ -45,6 +45,8 @@ public class TransactionBuilder {
         private byte[] mBuffer = null;
         private String mMsg = null;
 
+        //TODO
+        private byte[] packet = null;
 
         /**
          * Make new transaction instance
@@ -53,6 +55,9 @@ public class TransactionBuilder {
             mState = STATE_BEGIN;
             mMsg = null;
             mBuffer = null;
+
+            //TODO
+            packet = null;
         }
 
         /**
@@ -60,9 +65,9 @@ public class TransactionBuilder {
          *
          * @param msg String to send
          */
-        public void setMessage(String msg) {
+        public void setMessage(byte[] msg) {
             // TODO: do what you want
-            mMsg = msg;
+            packet = msg;
         }
 
         /**
@@ -70,7 +75,8 @@ public class TransactionBuilder {
          */
         public void settingFinished() {
             mState = STATE_SETTING_FINISHED;
-            mBuffer = mMsg.getBytes();
+            mBuffer = packet;
+//            mBuffer = mMsg.getBytes();
         }
 
         /**
@@ -106,7 +112,7 @@ public class TransactionBuilder {
                         // Check that there's actually something to send
                         if (mBuffer.length > 0) {
                             // Get the message bytes and tell the BleManager to write
-                            mBleManager.write(null, mBuffer);
+                            mBleManager.write(null, packet);
 
                             mState = STATE_TRANSFERED;
                             return true;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class BLeControlActivity extends AppCompatActivity {
         binding_BLEControl = DataBindingUtil.setContentView(this, R.layout.activity_blecontrol);
 
         tv_chat = binding_BLEControl.tvChat;
+        tv_chat.setMovementMethod(new ScrollingMovementMethod());
 
         setConnection();
 
