@@ -73,8 +73,11 @@ public class BleManager extends ComPacket {
             = new ArrayList<BluetoothGattCharacteristic>();
     private BluetoothGattCharacteristic mDefaultChar = null;
 
+    //TODO
+    private byte[] buffer = new byte[33];
     private int seq_num = 0;
     private PacketProcess process = null;
+    private boolean connected = false;
 
     // Parameters
     private int mState = -1;
@@ -587,6 +590,11 @@ public class BleManager extends ComPacket {
 
     @Override
     public boolean isConnect() {
+        if (mState == STATE_CONNECTED) {
+            connected = true;
+        } else if (mState == STATE_IDLE) {
+            connected = false;
+        }
         return false;
     }
 }

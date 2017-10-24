@@ -157,7 +157,8 @@ public class BTCTemplateService extends Service {
         Log.d("Send 1", message);
         TransactionBuilder.Transaction transaction = mTransactionBuilder.makeTransaction();
         transaction.begin();
-        transaction.setMessage(packet.getData());
+        //transaction.setMessage(packet.getData());
+        transaction.setMessage(packet.getPacket());
         transaction.settingFinished();
         transaction.sendTransaction();
         Log.d("Send 2", "DONE");
